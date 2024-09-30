@@ -5,8 +5,10 @@ import { FiRefreshCw } from "react-icons/fi";
 import { selectAction } from "../runLogActions";
 import styles from "../../page.module.css";
 import Row from "./RunLogRow";
+import { useSearchParams } from "next/navigation";
 
 export default function RunLog() {
+  const env = useSearchParams().get("env");
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -18,7 +20,7 @@ export default function RunLog() {
   const fetchData = async () => {
     setIsRefreshing(true);
     setLoading(true);
-    const data = await selectAction();
+    const data = await selectAction(env);
 
     console.log("WarehouseTable fetchData", data);
 

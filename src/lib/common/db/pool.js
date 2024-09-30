@@ -3,16 +3,20 @@ import poolConfig, { poolProdConfig } from "./pool-config";
 
 let client;
 let isConnected = false;
+let currEnv;
 
 const ConnectToCassandra = async (env) => {
-  if (isConnected && client) {
-    return true; // Skip connection
-  }
+  // if (isConnected && client) {
+  //   console.log("eennvv", env, "\n client-", client.options.localDataCenter);
+  //   return true; // Skip connection
+  // }
 
-  console.log(`Connecting to Cassandra... ${env}`);
+  currEnv = env.toLocaleUpperCase();
+  console.log(`Connecting to Cassandra... ${currEnv}`);
 
   // set correct config
-  const config = env === "PROD" ? poolProdConfig : poolConfig;
+  // console.log("env--", env);
+  const config = currEnv === "UAT" ? poolConfig : poolProdConfig;
 
   try {
     client = new cassandra.Client({
@@ -44,9 +48,10 @@ const CloseCassandraConnection = async () => {
   }
 };
 
-const SelectQuery = async (selectRowsQuery) => {
+const SelectQuery = async (selectRowsQuery, env) => {
   try {
-    await ConnectToCassandra();
+    // await ConnectToCassandra(env.toLocaleUpperCase());
+    await ConnectToCassandra(env || currEnv);
     const result = await client.execute(selectRowsQuery, [], { prepare: true });
     // console.log("🚀 ~ SelectQuery ~ result:", result);
 
@@ -61,9 +66,9 @@ const SelectQuery = async (selectRowsQuery) => {
   }
 };
 
-const UpdateQuery = async (updateRowQuery, params) => {
+const UpdateQuery = async (updateRowQuery, params, env) => {
   try {
-    await ConnectToCassandra();
+    await ConnectToCassandra(env || currEnv);
     await client.execute(updateRowQuery, params, { prepare: true });
     return true;
   } catch (error) {
@@ -72,9 +77,9 @@ const UpdateQuery = async (updateRowQuery, params) => {
   }
 };
 
-const InsertQuery = async (insertRowQuery, params) => {
+const InsertQuery = async (insertRowQuery, params, env) => {
   try {
-    await ConnectToCassandra();
+    await ConnectToCassandra(env || currEnv);
     await client.execute(insertRowQuery, params, { prepare: true });
     console.log("Insert successful");
     return true;
@@ -84,9 +89,9 @@ const InsertQuery = async (insertRowQuery, params) => {
   }
 };
 
-const DeleteQuery = async (deleteRowsQuery, params) => {
+const DeleteQuery = async (deleteRowsQuery, params, env) => {
   try {
-    await ConnectToCassandra();
+    await ConnectToCassandra(env || currEnv);
     await client.execute(deleteRowsQuery, params, { prepare: true });
     console.log("delete successful");
     return true;

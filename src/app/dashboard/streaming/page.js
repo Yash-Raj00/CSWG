@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,15 +16,23 @@ import {
 import styles from "../../page.module.css";
 import Table from "./table";
 import InsertModal from "./insertModal";
+import EnvContext from "@/context/envContext";
 
 export default function Streaming() {
   const searchParams = useSearchParams();
+
+  // const contEnv = useContext(EnvContext);
+  // console.log("contEnv -", contEnv);
 
   const env = searchParams.get("env");
 
   if (!env) {
     throw new Error("ENV MISSING");
   }
+  // const { contEnv, setContEnv } = useContext(EnvContext);
+  // console.log(contEnv);
+  // setContEnv(env.toLocaleUpperCase());
+  // console.log(contEnv);
 
   const [currentEnv, setCurrentEnv] = useState(env.toLocaleUpperCase());
 
@@ -38,8 +46,8 @@ export default function Streaming() {
   const [availableTypes, setAvailableTypes] = useState([]);
   const [availableGroups, setAvailableGroups] = useState([]);
 
-  const [selectedType, setSelectedType] = useState(""); 
-  const [selectedGroup, setSelectedGroup] = useState(""); 
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("");
 
   const onOpenModal = () => setModalOpen(true);
 
@@ -51,6 +59,7 @@ export default function Streaming() {
 
   useEffect(() => {
     const initialFetch = async () => {
+      console.log("currentEnv--", currentEnv);
       await ConnectToCassandra(currentEnv);
       fetchData();
     };
@@ -61,15 +70,21 @@ export default function Streaming() {
   const fetchData = async () => {
     setLoading(true);
 
-    const data = await selectAction();
+    const data = await selectAction(currentEnv);
 
     console.log("fetchData", JSON.stringify(data));
 
     setList(data);
     setLoading(false);
 
-    const types = [...new Set(data.map((item) => item.source_system_dbtype).filter(item => item))];
-    const groups = [...new Set(data.map((item) => item.groupid).filter(item => item))];
+    const types = [
+      ...new Set(
+        data.map((item) => item.source_system_dbtype).filter((item) => item)
+      ),
+    ];
+    const groups = [
+      ...new Set(data.map((item) => item.groupid).filter((item) => item)),
+    ];
 
     setAvailableTypes(types);
     setAvailableGroups(groups);
@@ -148,17 +163,17 @@ export default function Streaming() {
     }
   };
 
-  const handleDuplicateRow = row => {
+  const handleDuplicateRow = (row) => {
     setRowToDuplicate(row);
     setModalOpen(true);
   };
 
   const handleTypeChange = (e) => {
-    setSelectedType(e.target.value); 
+    setSelectedType(e.target.value);
   };
 
   const handleGroupChange = (e) => {
-    setSelectedGroup(e.target.value); 
+    setSelectedGroup(e.target.value);
   };
 
   const createRunFreqReset = async (definedGroup) => {
@@ -184,7 +199,9 @@ export default function Streaming() {
   const filteredList = list.filter((item) => {
     const matchesActive = activeOnly ? item.active === "Y" : true;
     const matchesVoid = notVoidOnly ? !item.voided_by : true;
-    const matchesType = selectedType ? item.source_system_dbtype === selectedType : true;
+    const matchesType = selectedType
+      ? item.source_system_dbtype === selectedType
+      : true;
     const matchesGroup = selectedGroup ? item.groupid === selectedGroup : true;
 
     return matchesActive && matchesVoid && matchesType && matchesGroup;
