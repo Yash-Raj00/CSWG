@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,23 +16,14 @@ import {
 import styles from "../../page.module.css";
 import Table from "./table";
 import InsertModal from "./insertModal";
-import EnvContext from "@/context/envContext";
 
 export default function Streaming() {
   const searchParams = useSearchParams();
-
-  // const contEnv = useContext(EnvContext);
-  // console.log("contEnv -", contEnv);
-
   const env = searchParams.get("env");
 
   if (!env) {
     throw new Error("ENV MISSING");
   }
-  // const { contEnv, setContEnv } = useContext(EnvContext);
-  // console.log(contEnv);
-  // setContEnv(env.toLocaleUpperCase());
-  // console.log(contEnv);
 
   const [currentEnv, setCurrentEnv] = useState(env.toLocaleUpperCase());
 

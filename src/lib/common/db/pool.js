@@ -15,7 +15,6 @@ const ConnectToCassandra = async (env) => {
   console.log(`Connecting to Cassandra... ${currEnv}`);
 
   // set correct config
-  // console.log("env--", env);
   const config = currEnv === "UAT" ? poolConfig : poolProdConfig;
 
   try {
