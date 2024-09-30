@@ -1,5 +1,4 @@
 "use client";
-import { useEffect} from "react";
 import { ToastContainer } from "react-toastify";
 import styles from "../../page.module.css";
 import { useSearchParams } from "next/navigation";

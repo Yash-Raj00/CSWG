@@ -49,7 +49,6 @@ const CloseCassandraConnection = async () => {
 
 const SelectQuery = async (selectRowsQuery, env) => {
   try {
-    // await ConnectToCassandra(env.toLocaleUpperCase());
     await ConnectToCassandra(env || currEnv);
     const result = await client.execute(selectRowsQuery, [], { prepare: true });
     // console.log("🚀 ~ SelectQuery ~ result:", result);
