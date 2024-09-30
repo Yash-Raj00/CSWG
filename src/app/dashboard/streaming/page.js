@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
@@ -58,7 +58,7 @@ export default function Streaming() {
     initialFetch();
   }, [currentEnv, fetchData]);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     const data = await selectAction(currentEnv);
 
     console.log("fetchData", JSON.stringify(data));
@@ -77,7 +77,7 @@ export default function Streaming() {
 
     setAvailableTypes(types);
     setAvailableGroups(groups);
-  }, [currentEnv]);
+  };
 
   const handleActiveChange = (e) => {
     setActiveOnly(e.target.checked);

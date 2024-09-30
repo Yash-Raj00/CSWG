@@ -1,21 +1,17 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { FiRefreshCw } from "react-icons/fi";
 import { selectAction } from "../runLogActions";
 import styles from "../../page.module.css";
 import Row from "./RunLogRow";
 
-export default function RunLog(env) {
+export default function RunLog({ env }) {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     setIsRefreshing(true);
     setLoading(true);
     const data = await selectAction(env);
@@ -25,7 +21,11 @@ export default function RunLog(env) {
     setList(data);
     setLoading(false);
     setIsRefreshing(false);
-  }, [env]);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <main className={styles.streaming}>
