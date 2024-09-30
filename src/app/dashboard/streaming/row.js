@@ -6,6 +6,7 @@ import "react-responsive-modal/styles.css";
 import { dbTypePayload } from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
+import { useSearchParams } from "next/navigation";
 
 const activePayload = [
   { value: "Y", label: "Y" },
@@ -31,6 +32,7 @@ export default function Row({
   updateLastRunAction,
   handleDuplicateRow,
 }) {
+  const env = useSearchParams().get("env");
   const [modalOpen, setModalOpen] = useState(false);
   const [changed, setChanged] = useState(false);
   const [streamingRow, setStreamingRow] = useState(row);
@@ -83,7 +85,7 @@ export default function Row({
       source_table_name: streamingRow.source_table_name,
     };
 
-    const result = await updateLastRunAction(updatedRow);
+    const result = await updateLastRunAction(updatedRow, env);
 
     if (!result) {
       console.error("Failed to remove last run");
@@ -99,7 +101,7 @@ export default function Row({
     if (!window.confirm("Are you sure you want to delete this row?")) {
       return;
     }
-    deleteRow(streamingRow);
+    deleteRow(streamingRow, env);
   };
 
   // if index is even then row color is white, else row color is lightgray

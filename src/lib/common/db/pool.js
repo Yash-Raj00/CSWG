@@ -6,16 +6,16 @@ let isConnected = false;
 let currEnv;
 
 const ConnectToCassandra = async (env) => {
-  // if (isConnected && client) {
-  //   console.log("eennvv", env, "\nclient-", client.options.localDataCenter);
-  //   // return true; // Skip connection
-  // }
-
   currEnv = env.toLocaleUpperCase();
-  console.log(`Connecting to Cassandra... ${currEnv}`);
 
   // set correct config
   const config = currEnv === "UAT" ? poolConfig : poolProdConfig;
+
+  if (isConnected && client.options.localDataCenter === config.dc) {
+    return true; // Skip connection
+  }
+
+  console.log(`Connecting to Cassandra... ${currEnv}`);
 
   try {
     client = new cassandra.Client({

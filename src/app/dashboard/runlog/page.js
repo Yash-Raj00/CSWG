@@ -2,10 +2,10 @@
 import styles from "../../page.module.css";
 import RunLog from "./RunLogTable";
 
-export default function Jobs() {
+export default function Jobs(env) {
   return (
     <main className={styles.streaming}>
-      <RunLog />
+      <RunLog env={env} />
     </main>
   );
 }

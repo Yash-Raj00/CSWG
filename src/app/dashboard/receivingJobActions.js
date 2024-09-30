@@ -13,18 +13,18 @@ const updateRowQuery = `UPDATE wip_rcv_ing.rcv_job_control
   SET enabled = ?, update_time = ?
   WHERE job_id = ? and warehouse_id = ?`;
 
-const selectAction = async () => {
-  return await SelectQuery(selectReceivingJobRowsQuery);
+const selectAction = async (env) => {
+  return await SelectQuery(selectReceivingJobRowsQuery, env);
 };
 
-const updateAction = async (row) => {
+const updateAction = async (row, env) => {
   const { enabled, job_id, warehouse_id } = row;
 
   const update_time = new Date().toISOString().slice(0, 19).replace("T", " ");
 
   const params = [enabled, update_time, job_id, warehouse_id];
 
-  return await UpdateQuery(updateRowQuery, params);
+  return await UpdateQuery(updateRowQuery, params, env);
 };
 
 export { selectAction, updateAction, ConnectToCassandra };

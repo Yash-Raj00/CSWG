@@ -3,6 +3,7 @@ import Modal from "react-responsive-modal";
 import styles from "./insertModal.module.css";
 import { insertAction } from "../actions";
 import { dbTypePayload, groupTypePayload } from "./constants";
+import { useSearchParams } from "next/navigation";
 
 const initialFormData = {
   source_system_name: "",
@@ -21,6 +22,7 @@ const initialFormData = {
 };
 
 const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate }) => {
+  const env = useSearchParams().get("env");
   const [formData, setFormData] = useState(initialFormData);
   const [formError, setFormError] = useState("");
 
@@ -87,7 +89,7 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
       target_table_list: [
         `${formData.target_keyspace}.${formData.target_table_name}`,
       ],
-    });
+    }, env);
 
     if (response) {
       handleCloseModal();

@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import {
   selectAction,
   updateAction,
-  ConnectToCassandra,
 } from "../liftJobActions";
 import styles from "../../page.module.css";
 import Row from "./liftJobRow";
@@ -17,8 +16,7 @@ export default function LiftTable({ env }) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await ConnectToCassandra(env);
-      const data = await selectAction();
+      const data = await selectAction(env);
 
       console.log("LiftTable fetchData", data);
 
@@ -32,7 +30,7 @@ export default function LiftTable({ env }) {
   const updateRow = async (row) => {
     try {
       // Attempt to update the database
-      const result = await updateAction(row);
+      const result = await updateAction(row, env);
 
       if (!result) {
         toast.error("Failed to update row");

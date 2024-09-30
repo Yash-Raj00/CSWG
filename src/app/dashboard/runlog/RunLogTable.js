@@ -7,7 +7,7 @@ import styles from "../../page.module.css";
 import Row from "./RunLogRow";
 import { useSearchParams } from "next/navigation";
 
-export default function RunLog() {
+export default function RunLog(env) {
   const env = useSearchParams().get("env");
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);

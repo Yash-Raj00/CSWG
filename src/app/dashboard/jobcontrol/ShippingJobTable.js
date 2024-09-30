@@ -19,7 +19,7 @@ export default function ShippingTable({ env }) {
     const fetchData = async () => {
       setLoading(true);
       await ConnectToCassandra(env);
-      const data = await selectAction();
+      const data = await selectAction(env);
 
       console.log("ShippingTable fetchData", data);
 
@@ -32,7 +32,7 @@ export default function ShippingTable({ env }) {
 
   const updateRow = async (row) => {
     // attempt to update db
-    const result = await updateAction(row);
+    const result = await updateAction(row, env);
 
     if (!result) {
       toast.error("Failed to update row");

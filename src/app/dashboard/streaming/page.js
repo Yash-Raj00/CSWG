@@ -89,7 +89,7 @@ export default function Streaming() {
   };
 
   const updateRow = async (row) => {
-    const result = await updateAction(row);
+    const result = await updateAction(row, env);
 
     if (!result) {
       toast.error("Failed to update row");
@@ -121,7 +121,7 @@ export default function Streaming() {
       updated_date: Date.now() / 1000,
     };
 
-    const result = await deleteAction(updatedRow);
+    const result = await deleteAction(updatedRow, env);
 
     if (!result) {
       toast.error("Failed to delete row");

@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import {
   selectAction,
   updateAction,
-  ConnectToCassandra,
 } from "../receivingJobActions";
 import styles from "../../page.module.css";
 import Row from "./receivingJobRow";
@@ -18,8 +17,7 @@ export default function ReceivingJobTable({ env }) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await ConnectToCassandra(env);
-      const data = await selectAction();
+      const data = await selectAction(env);
 
       console.log("ReceivingJobTable fetchData", data);
 
@@ -32,7 +30,7 @@ export default function ReceivingJobTable({ env }) {
 
   const updateRow = async (row) => {
     // attempt to update db
-    const result = await updateAction(row);
+    const result = await updateAction(row, env);
 
     if (!result) {
       toast.error("Failed to update row");

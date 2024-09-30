@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import { ToastContainer } from "react-toastify";
 import styles from "../../page.module.css";
 import { useSearchParams } from "next/navigation";
@@ -18,7 +18,7 @@ export default function Jobs() {
     throw new Error("ENV MISSING");
   }
 
-  const [currentEnv] = useState(env.toLocaleUpperCase());
+  const currentEnv = env.toLocaleUpperCase();
 
   return (
     <main className={styles.streaming}>

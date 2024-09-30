@@ -13,11 +13,11 @@ const updateRowQuery = `UPDATE wip_lift_ing.lift_job_control
   SET enable = ?, update_time = ?
   WHERE job_id = ? and warehouse_id = ?`;
 
-const selectAction = async () => {
-  return await SelectQuery(selectLiftJobRowsQuery);
+const selectAction = async (env) => {
+  return await SelectQuery(selectLiftJobRowsQuery, env);
 };
 
-const updateAction = async (row) => {
+const updateAction = async (row, env) => {
   const { enable, job_id, warehouse_id } = row;
 
   const update_time = new Date().toISOString().slice(0, 19).replace("T", " ");
@@ -29,7 +29,7 @@ const updateAction = async (row) => {
     warehouse_id,
   ];
 
-  return await UpdateQuery(updateRowQuery, params);
+  return await UpdateQuery(updateRowQuery, params, env);
 };
 
 export { selectAction, updateAction, ConnectToCassandra };

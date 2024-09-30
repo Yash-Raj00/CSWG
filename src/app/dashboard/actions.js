@@ -28,17 +28,17 @@ const deleteRowQuery = `UPDATE wip_configurations.spark_streaming_table_config
   SET voided_by = ?, active = ?, updated_date = ?
   WHERE source_system_name = ? and source_table_name = ?`;
 
-const selectAction = async () => {
-  return await SelectQuery(selectRowsQuery);
+const selectAction = async (env) => {
+  return await SelectQuery(selectRowsQuery, env);
 };
 
-const updateLastRunAction = async (row) => {
+const updateLastRunAction = async (row, env) => {
   const { source_system_name, source_table_name } = row;
   const params = [source_system_name, source_table_name];
-  return await UpdateQuery(updateLastRunTimestamp, params);
+  return await UpdateQuery(updateLastRunTimestamp, params, env);
 };
 
-const updateAction = async (row) => {
+const updateAction = async (row, env) => {
   const {
     groupid,
     active,
@@ -77,10 +77,10 @@ const updateAction = async (row) => {
     source_table_name,
   ];
 
-  return await UpdateQuery(updateRowQuery, params);
+  return await UpdateQuery(updateRowQuery, params, env);
 };
 
-const insertAction = async (row) => {
+const insertAction = async (row, env) => {
   const {
     source_system_name,
     source_table_name,
@@ -117,10 +117,10 @@ const insertAction = async (row) => {
 
   console.log("params: ", params);
 
-  return await InsertQuery(insertRowQuery, params);
+  return await InsertQuery(insertRowQuery, params, env);
 };
 
-const deleteAction = async (row) => {
+const deleteAction = async (row, env) => {
   const { source_system_name, source_table_name, updated_date } = row;
 
   console.log("deleteAction: ", row);
@@ -138,7 +138,7 @@ const deleteAction = async (row) => {
     source_table_name,
   ];
 
-  return await DeleteQuery(deleteRowQuery, params);
+  return await DeleteQuery(deleteRowQuery, params, env);
 };
 
 export {
