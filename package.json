@@ -1,0 +1,30 @@
+{
+  "name": "streaming-manager",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tanstack/react-table": "^8.19.3",
+    "axios": "^1.6.8",
+    "cassandra-driver": "^4.7.2",
+    "fast-sort": "^3.4.1",
+    "file-saver": "^2.0.5",
+    "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
+    "next": "14.2.5",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-icons": "^5.2.1",
+    "react-responsive-modal": "^6.4.2",
+    "react-toastify": "^10.0.5"
+  },
+  "devDependencies": {
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5"
+  }
+}
