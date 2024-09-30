@@ -7,8 +7,8 @@ let currEnv;
 
 const ConnectToCassandra = async (env) => {
   // if (isConnected && client) {
-  //   console.log("eennvv", env, "\n client-", client.options.localDataCenter);
-  //   return true; // Skip connection
+  //   console.log("eennvv", env, "\nclient-", client.options.localDataCenter);
+  //   // return true; // Skip connection
   // }
 
   currEnv = env.toLocaleUpperCase();

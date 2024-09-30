@@ -60,6 +60,7 @@ export default function Streaming() {
   useEffect(() => {
     const initialFetch = async () => {
       console.log("currentEnv--", currentEnv);
+      setLoading(true);
       await ConnectToCassandra(currentEnv);
       fetchData();
     };
@@ -68,8 +69,6 @@ export default function Streaming() {
   }, [currentEnv]);
 
   const fetchData = async () => {
-    setLoading(true);
-
     const data = await selectAction(currentEnv);
 
     console.log("fetchData", JSON.stringify(data));
@@ -218,7 +217,7 @@ export default function Streaming() {
   };
 
   return (
-    <main className={styles.streaming}>
+    <main className={`${styles.streaming} ${loading ? styles.loadingCursor : ""}`}>
       {currentEnv !== "UAT" && (
         <div
           style={{

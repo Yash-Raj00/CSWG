@@ -26,6 +26,9 @@
   padding: 30px;
   min-height: 100vh;
 }
+.loadingCursor{
+  cursor: wait;
+}
 .marginTop30 {
   margin-top: 30px;
 }
