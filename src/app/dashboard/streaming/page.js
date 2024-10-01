@@ -16,6 +16,7 @@ import {
 import styles from "../../page.module.css";
 import Table from "./table";
 import InsertModal from "./insertModal";
+import { groupTypePayload } from "./constants";
 
 const AVAILABLE_SORT_OPTIONS = [
   "Time Updated",
@@ -38,12 +39,8 @@ export default function Streaming() {
   const [notVoidOnly, setNotVoidOnly] = useState(true);
   const [rowToDuplicate, setRowToDuplicate] = useState();
   const [loading, setLoading] = useState(false);
-
   const [groupCounts, setGroupCounts] = useState([]);
-
   const [availableSources, setAvailableSources] = useState([]);
-  const [availableTypes, setAvailableTypes] = useState([]);
-  const [availableGroups, setAvailableGroups] = useState([]);
 
   const [selectedSortingType, setSelectedSortingType] = useState(AVAILABLE_SORT_OPTIONS[0]);
   const [selectedType, setSelectedType] = useState("");
@@ -90,14 +87,6 @@ export default function Streaming() {
     });
     setGroupCounts(grpCounts);
 
-    const types = [
-      ...new Set(
-        data.map((item) => item.source_system_dbtype).filter((item) => item)
-      ),
-    ];
-    const groups = [
-      ...new Set(data.map((item) => item.groupid).filter((item) => item)),
-    ];
     const sources = [
       ...new Set(
         data.map((item) => item.source_system_name).filter((item) => item)
@@ -105,8 +94,6 @@ export default function Streaming() {
     ];
 
     setAvailableSources(sources);
-    setAvailableTypes(types);
-    setAvailableGroups(groups);
   }
 
   const handleActiveChange = (e) => {
@@ -337,7 +324,7 @@ export default function Streaming() {
             Type:
             <select value={selectedType} onChange={handleTypeChange}>
               <option value="">All</option>
-              {availableTypes.map((type) => (
+              {dbTypePayload.map((type) => (
                 <option key={type} value={type}>
                   {type}
                 </option>
@@ -350,7 +337,7 @@ export default function Streaming() {
             Group:
             <select value={selectedGroup} onChange={handleGroupChange}>
               <option value="">All</option>
-              {availableGroups.map((group) => (
+              {groupTypePayload.map((group) => (
                 <option key={group} value={group}>
                   {group}
                 </option>
