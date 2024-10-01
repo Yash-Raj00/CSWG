@@ -34,11 +34,13 @@ export default function Streaming() {
   const [rowToDuplicate, setRowToDuplicate] = useState();
   const [loading, setLoading] = useState(false);
 
+  const [availableSources, setAvailableSources] = useState([]);
   const [availableTypes, setAvailableTypes] = useState([]);
   const [availableGroups, setAvailableGroups] = useState([]);
 
   const [selectedType, setSelectedType] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
+  const [selectedSource, setSelectedSource] = useState("");
 
   const onOpenModal = () => setModalOpen(true);
 
@@ -56,9 +58,9 @@ export default function Streaming() {
     };
 
     initialFetch();
-  }, [currentEnv, fetchData]);
+  }, [currentEnv]);
 
-  const fetchData = async () => {
+  async function fetchData() {
     const data = await selectAction(currentEnv);
 
     console.log("fetchData", JSON.stringify(data));
@@ -74,10 +76,16 @@ export default function Streaming() {
     const groups = [
       ...new Set(data.map((item) => item.groupid).filter((item) => item)),
     ];
+    const sources = [
+      ...new Set(
+        data.map((item) => item.source_system_name).filter((item) => item)
+      ),
+    ];
 
+    setAvailableSources(sources);
     setAvailableTypes(types);
     setAvailableGroups(groups);
-  };
+  }
 
   const handleActiveChange = (e) => {
     setActiveOnly(e.target.checked);
@@ -164,6 +172,9 @@ export default function Streaming() {
   const handleGroupChange = (e) => {
     setSelectedGroup(e.target.value);
   };
+  const handleSourceChange = (e) => {
+    setSelectedSource(e.target.value);
+  };
 
   const createRunFreqReset = async (definedGroup) => {
     const results = [];
@@ -191,9 +202,18 @@ export default function Streaming() {
     const matchesType = selectedType
       ? item.source_system_dbtype === selectedType
       : true;
+    const matchesSource = selectedSource
+      ? item.source_system_name === selectedSource
+      : true;
     const matchesGroup = selectedGroup ? item.groupid === selectedGroup : true;
 
-    return matchesActive && matchesVoid && matchesType && matchesGroup;
+    return (
+      matchesActive &&
+      matchesVoid &&
+      matchesSource &&
+      matchesType &&
+      matchesGroup
+    );
   });
 
   const sorted = sort(filteredList).asc(
@@ -207,7 +227,9 @@ export default function Streaming() {
   };
 
   return (
-    <main className={`${styles.streaming} ${loading ? styles.loadingCursor : ""}`}>
+    <main
+      className={`${styles.streaming} ${loading ? styles.loadingCursor : ""}`}
+    >
       {currentEnv !== "UAT" && (
         <div
           style={{
@@ -225,7 +247,14 @@ export default function Streaming() {
         </div>
       )}
       <h1>Streaming table</h1>
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          marginBottom: 40,
+          marginTop: 5,
+        }}
+      >
         <div style={{ marginRight: 20 }}>
           <label>
             <input
@@ -244,6 +273,19 @@ export default function Streaming() {
               onChange={handleVoidChange}
             />
             Not Void Only
+          </label>
+        </div>
+        <div style={{ marginRight: 20 }}>
+          <label>
+            Source:
+            <select value={selectedSource} onChange={handleSourceChange}>
+              <option value="">All</option>
+              {availableSources.map((source) => (
+                <option key={source} value={source}>
+                  {source}
+                </option>
+              ))}
+            </select>
           </label>
         </div>
         <div style={{ marginRight: 20 }}>
@@ -276,12 +318,14 @@ export default function Streaming() {
           <span>loading...</span>
         ) : (
           <div>
-            <button onClick={fetchData}>Refresh</button>
-            <button style={{ marginLeft: "5px" }} onClick={onOpenModal}>
-              Insert
+            <button style={{ padding: "1px 4px" }} onClick={fetchData}>
+              Refresh
             </button>
-            <button style={{ marginLeft: "5px" }} onClick={exportToJson}>
-              Export JSON
+            <button
+              style={{ marginLeft: "5px", padding: "1px 4px" }}
+              onClick={onOpenModal}
+            >
+              Insert
             </button>
           </div>
         )}
@@ -300,6 +344,13 @@ export default function Streaming() {
         streamingData={list}
         rowToDuplicate={rowToDuplicate}
       />
+      <button
+        disabled={loading}
+        style={{ marginTop: "5px", padding: "2px 6px" }}
+        onClick={exportToJson}
+      >
+        Export JSON
+      </button>
     </main>
   );
 }

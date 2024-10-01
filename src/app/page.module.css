@@ -17,7 +17,6 @@
   cursor: wait;
 }
 
-
 .streaming {
   display: flex;
   flex-direction: column;
@@ -26,7 +25,7 @@
   padding: 30px;
   min-height: 100vh;
 }
-.loadingCursor{
+.loadingCursor {
   cursor: wait;
 }
 .marginTop30 {
@@ -104,12 +103,21 @@
 }
 
 .table {
-  border-collapse: separate;
+  /* border-collapse: separate; */
+  border-collapse: collapse;
   border-spacing: 3px;
 }
 
 .row {
   margin-bottom: 3px;
+  border-top: 3px solid;
+  border-left: 3px solid;
+  border-right: 3px solid;
+}
+.rowMid {
+  margin-bottom: 3px;
+  border-left: 3px solid;
+  border-right: 3px solid;
 }
 
 .td {
@@ -119,6 +127,20 @@
 .streamingTd {
   padding-bottom: 8px;
   text-align: center;
+  border-bottom: 2px solid white;
+}
+.pb_4 {
+  padding-bottom: 4px;
+}
+.streamingTdMid {
+  padding-bottom: 8px;
+  text-align: center;
+}
+.border_l_2 {
+  border-left: 2px solid #ffffff;
+}
+.border_r_2 {
+  border-right: 2px solid #ffffff;
 }
 
 .grid {

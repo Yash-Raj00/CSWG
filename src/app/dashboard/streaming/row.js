@@ -108,17 +108,20 @@ export default function Row({
   const rowColor = index % 2 !== 0 ? "" : "#bbb";
   const isVoid = !!streamingRow.voided_by;
 
-  let activeCellColor = null;
-  if (streamingRow.error_text !== null) {
-    activeCellColor = "red";
+  let activeRowBorderColor = null;
+  if (streamingRow.error_text !== null || streamingRow.default_run_frequency_in_secs >= 3600) {
+    activeRowBorderColor = "red";
   } else if (streamingRow.active === "Y") {
-    activeCellColor = "lightgreen";
+    activeRowBorderColor = "lightgreen";
+  }
+  else {
+    activeRowBorderColor = "grey";
   }
 
   return (
     <>
-      <tr className={styles.row} style={{ backgroundColor: rowColor }}>
-        <td className={styles.streamingTd}>
+      <tr className={styles.row} style={{ backgroundColor: rowColor, borderColor: activeRowBorderColor}}>
+        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
           <span
             className={styles.tinySpan}
             style={{
@@ -129,7 +132,7 @@ export default function Row({
             {streamingRow.source_system_name}
           </span>
         </td>
-        <td className={styles.streamingTd}>
+        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
           <span
             className={styles.limitedSpan}
             style={{
@@ -140,7 +143,7 @@ export default function Row({
             {streamingRow.source_table_name}
           </span>
         </td>
-        <td className={styles.streamingTd}>
+        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
           <select
             value={streamingRow.source_system_dbtype}
             name="source_system_dbtype"
@@ -153,7 +156,7 @@ export default function Row({
             ))}
           </select>
         </td>
-        <td className={styles.streamingTd}>
+        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
           <input
             name="target_keyspace"
             type="text"
@@ -162,7 +165,7 @@ export default function Row({
             onChange={handleChange}
           />
         </td>
-        <td className={styles.streamingTd}>
+        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
           <input
             name="target_table_name"
             type="text"
@@ -171,14 +174,14 @@ export default function Row({
             onChange={handleChange}
           />
         </td>
-        <td className={styles.streamingTd}>
+        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
           <select
             name="active"
             onChange={handleChange}
             value={streamingRow.active}
-            style={{
-              backgroundColor: activeCellColor,
-            }}
+            // style={{
+            //   backgroundColor: activeCellColor,
+            // }}
           >
             {activePayload.map((item) => (
               <option key={item.value} value={item.value}>
@@ -187,7 +190,7 @@ export default function Row({
             ))}
           </select>
         </td>
-        <td className={styles.streamingTd}>
+        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
           <select
             name="groupid"
             onChange={handleChange}
@@ -201,23 +204,31 @@ export default function Row({
           </select>
         </td>
 
-        <td className={styles.streamingTd}>
+        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
           <button onClick={handleCopy} style={{ marginRight: 4 }}>
             Copy Query
           </button>
           <button onClick={() => onOpenModal()} style={{ marginRight: 4 }}>
             Edit Query
           </button>
+          <button
+            onClick={commitChanges}
+            disabled={!changed}
+            style={{ width: "60px" }}
+          >
+            Save
+          </button>
         </td>
       </tr>
       {showExpanded && (
-        <tr className={styles.row} style={{ backgroundColor: rowColor }}>
+        <tr className={`${styles.rowMid}`} style={{ backgroundColor: rowColor, borderColor: activeRowBorderColor}}>
           <td
+          className=''
             colSpan="11"
             style={{
               flex: 1,
               flexDirection: "row",
-              justifyContent: "space-between",
+              justifyContent: "space-between"
             }}
           >
             <ExpandedRowContent
@@ -232,8 +243,8 @@ export default function Row({
           </td>
         </tr>
       )}
-      <tr style={{ backgroundColor: rowColor }}>
-        <td colSpan="11">
+      <tr style={{ backgroundColor: rowColor, border: "2.5px solid", borderColor: activeRowBorderColor, borderTop: "none",}}>
+        <td colSpan="11" style={{paddingTop: 4 }} >
           <EditRow
             setShowExpanded={setShowExpanded}
             showExpanded={showExpanded}
@@ -263,6 +274,7 @@ export default function Row({
           />
         )}
       </Modal>
+      <br />
     </>
   );
 }

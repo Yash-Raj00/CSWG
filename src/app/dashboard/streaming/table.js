@@ -14,17 +14,17 @@ export default function Table({
     <table className={styles.table}>
       <thead>
         <tr>
-          <th>Source Name</th>
-          <th>Source Table</th>
-          <th>Type</th>
-          <th>Target Keyspace</th>
-          <th>Target Table</th>
-          <th>Active</th>
-          <th>Group</th>
-          <th></th>
+          <th className={styles.pb_4}>Source Name</th>
+          <th className={styles.pb_4}>Source Table</th>
+          <th className={styles.pb_4}>Type</th>
+          <th className={styles.pb_4}>Target Keyspace</th>
+          <th className={styles.pb_4}>Target Table</th>
+          <th className={styles.pb_4}>Active</th>
+          <th className={styles.pb_4}>Group</th>
+          <th className={styles.pb_4}>Actions</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody style={{}}>
         {data.map((row, index) => (
           <Row
             row={row}

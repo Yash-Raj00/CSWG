@@ -26,7 +26,7 @@ function ExpandedRowContent({
         justifyContent: "space-between",
       }}
     >
-      <div className={styles.streamingTd} style={tableRowStyle}>
+      <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.tinySpan}>
           {streamingRow.voided_by && (
             <>
@@ -36,7 +36,7 @@ function ExpandedRowContent({
           )}
         </span>
       </div>
-      <div className={styles.streamingTd} style={tableRowStyle}>
+      <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>
           Last run: <br />
           {streamingRow.last_run_timestamp}
@@ -45,10 +45,10 @@ function ExpandedRowContent({
         <br />
         <span className={styles.smallCell}>
           Updated: <br />
-          {streamingRow.updated_date}
+          {streamingRow.updated_date ? new Date(streamingRow.updated_date * 1000).toLocaleDateString() + " " + new Date(streamingRow.updated_date * 1000).toLocaleTimeString() : "not yet"}
         </span>
       </div>
-      <div className={styles.streamingTd} style={tableRowStyle}>
+      <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>Facility</span>
         <span className={styles.smallCell}>
           <input
@@ -60,7 +60,7 @@ function ExpandedRowContent({
           />
         </span>
       </div>
-      <div className={styles.streamingTd} style={tableRowStyle}>
+      <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>run freq</span>
         <span className={styles.smallCell}>
           <input
@@ -72,7 +72,7 @@ function ExpandedRowContent({
           />
         </span>
       </div>
-      <div className={styles.streamingTd} style={tableRowStyle}>
+      <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>default run</span>
         <span className={styles.smallCell}>
           <input
@@ -84,7 +84,7 @@ function ExpandedRowContent({
           />
         </span>
       </div>
-      <div className={styles.streamingTd} style={tableRowStyle}>
+      <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>alert</span>
         <span className={styles.smallCell}>
           <input
@@ -96,7 +96,7 @@ function ExpandedRowContent({
           />
         </span>
       </div>
-      <div className={styles.streamingTd} style={tableRowStyle}>
+      <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>batch</span>
         <span className={styles.smallCell}>
           <input
@@ -108,7 +108,7 @@ function ExpandedRowContent({
           />
         </span>
       </div>
-      <div className={styles.streamingTd} style={tableRowStyle}>
+      <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>Notes</span>
         <textarea
           name="notes"
@@ -125,7 +125,7 @@ function ExpandedRowContent({
           }}
         />
       </div>
-      <div className={styles.streamingTd} style={tableRowStyle}>
+      <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}></span>
         <div
           style={{
@@ -136,13 +136,6 @@ function ExpandedRowContent({
             padding: "2px",
           }}
         >
-          <button
-            onClick={commitChanges}
-            disabled={!changed}
-            style={{ width: "60px" }}
-          >
-            Save
-          </button>
           <button onClick={() => handleDuplicateRow(streamingRow)} style={{ width: "60px" }}>
             Duplicate
           </button>
