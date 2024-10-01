@@ -179,9 +179,6 @@ export default function Row({
             name="active"
             onChange={handleChange}
             value={streamingRow.active}
-            // style={{
-            //   backgroundColor: activeCellColor,
-            // }}
           >
             {activePayload.map((item) => (
               <option key={item.value} value={item.value}>

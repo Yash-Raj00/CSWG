@@ -21,10 +21,10 @@ export default function Table({
           <th className={styles.pb_4}>Target Table</th>
           <th className={styles.pb_4}>Active</th>
           <th className={styles.pb_4}>Group</th>
-          <th className={styles.pb_4}>Actions</th>
+          <th className={styles.pb_4}></th>
         </tr>
       </thead>
-      <tbody style={{}}>
+      <tbody>
         {data.map((row, index) => (
           <Row
             row={row}

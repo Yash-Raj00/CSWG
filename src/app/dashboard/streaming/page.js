@@ -17,6 +17,11 @@ import styles from "../../page.module.css";
 import Table from "./table";
 import InsertModal from "./insertModal";
 
+const AVAILABLE_SORT_OPTIONS = [
+  "Time Updated",
+  "Source Name",
+]
+
 export default function Streaming() {
   const searchParams = useSearchParams();
   const env = searchParams.get("env");
@@ -25,7 +30,7 @@ export default function Streaming() {
     throw new Error("ENV MISSING");
   }
 
-  const [currentEnv, setCurrentEnv] = useState(env.toLocaleUpperCase());
+  const currentEnv = env.toLocaleUpperCase();
 
   const [list, setList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -36,15 +41,11 @@ export default function Streaming() {
 
   const [groupCounts, setGroupCounts] = useState([]);
 
-  const [availableSortingParams, setAvailableSortingParams] = useState([
-    "Time Updated",
-    "Source Name",
-  ]);
   const [availableSources, setAvailableSources] = useState([]);
   const [availableTypes, setAvailableTypes] = useState([]);
   const [availableGroups, setAvailableGroups] = useState([]);
 
-  const [selectedSortingType, setSelectedSortingType] = useState("Time Updated");
+  const [selectedSortingType, setSelectedSortingType] = useState(AVAILABLE_SORT_OPTIONS[0]);
   const [selectedType, setSelectedType] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedSource, setSelectedSource] = useState("");
@@ -290,7 +291,7 @@ export default function Streaming() {
               value={selectedSortingType}
               onChange={handleSortingTypeChange}
             >
-              {availableSortingParams.map((type) => (
+              {AVAILABLE_SORT_OPTIONS.map((type) => (
                 <option key={type} value={type}>
                   {type}
                 </option>
