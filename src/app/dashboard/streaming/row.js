@@ -109,7 +109,7 @@ export default function Row({
   const isVoid = !!streamingRow.voided_by;
 
   let activeRowBorderColor = null;
-  if (streamingRow.error_text !== null || streamingRow.default_run_frequency_in_secs >= 3600) {
+  if (streamingRow.error_text !== null || streamingRow.default_run_frequency_in_secs === 3600) {
     activeRowBorderColor = "red";
   } else if (streamingRow.active === "Y") {
     activeRowBorderColor = "lightgreen";

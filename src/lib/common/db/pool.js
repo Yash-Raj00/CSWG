@@ -51,7 +51,7 @@ const SelectQuery = async (selectRowsQuery, env) => {
   try {
     await ConnectToCassandra(env || currEnv);
     const result = await client.execute(selectRowsQuery, [], { prepare: true });
-    // console.log("🚀 ~ SelectQuery ~ result:", result);
+    // console.log("SelectQuery ~ result:", selectRowsQuery, result.rows);
 
     if (!result) {
       return [];

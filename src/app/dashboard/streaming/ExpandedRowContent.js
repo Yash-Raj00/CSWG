@@ -45,7 +45,7 @@ function ExpandedRowContent({
         <br />
         <span className={styles.smallCell}>
           Updated: <br />
-          {streamingRow.updated_date ? new Date(streamingRow.updated_date * 1000).toLocaleDateString() + " " + new Date(streamingRow.updated_date * 1000).toLocaleTimeString() : "not yet"}
+          {streamingRow.updated_date ? new Date(streamingRow.updated_date * 1000).toLocaleDateString() + " " + new Date(streamingRow.updated_date * 1000).toLocaleTimeString() : ""}
         </span>
       </div>
       <div className={styles.streamingTdMid} style={tableRowStyle}>

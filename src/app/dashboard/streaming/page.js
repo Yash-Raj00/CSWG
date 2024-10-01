@@ -34,10 +34,17 @@ export default function Streaming() {
   const [rowToDuplicate, setRowToDuplicate] = useState();
   const [loading, setLoading] = useState(false);
 
+  const [groupCounts, setGroupCounts] = useState([]);
+
+  const [availableSortingParams, setAvailableSortingParams] = useState([
+    "Time Updated",
+    "Source Name",
+  ]);
   const [availableSources, setAvailableSources] = useState([]);
   const [availableTypes, setAvailableTypes] = useState([]);
   const [availableGroups, setAvailableGroups] = useState([]);
 
+  const [selectedSortingType, setSelectedSortingType] = useState("Time Updated");
   const [selectedType, setSelectedType] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedSource, setSelectedSource] = useState("");
@@ -52,8 +59,6 @@ export default function Streaming() {
 
   useEffect(() => {
     const initialFetch = async () => {
-      setLoading(true);
-      await ConnectToCassandra(currentEnv);
       fetchData();
     };
 
@@ -61,12 +66,28 @@ export default function Streaming() {
   }, [currentEnv]);
 
   async function fetchData() {
+    setLoading(true);
+    await ConnectToCassandra(currentEnv);
     const data = await selectAction(currentEnv);
 
     console.log("fetchData", JSON.stringify(data));
 
     setList(data);
     setLoading(false);
+
+    const grpCounts = [0, 0, 0];
+    data.forEach((item) => {
+      const lastChar = item.groupid?.slice(-1);
+      if (!lastChar) return;
+      if ((lastChar >= 0 && lastChar <= 10) || item.groupid?.includes("GRP0")) {
+        grpCounts[0]++;
+      } else if (lastChar >= "11" && lastChar <= "15") {
+        grpCounts[1]++;
+      } else if (lastChar === "p") {
+        grpCounts[2]++;
+      }
+    });
+    setGroupCounts(grpCounts);
 
     const types = [
       ...new Set(
@@ -151,6 +172,10 @@ export default function Streaming() {
     });
   };
 
+  const handleSortingTypeChange = (e) => {
+    setSelectedSortingType(e.target.value);
+  };
+
   const handleCopy = async (dataToCopy) => {
     try {
       await navigator.clipboard.writeText(dataToCopy);
@@ -216,9 +241,12 @@ export default function Streaming() {
     );
   });
 
-  const sorted = sort(filteredList).asc(
-    (r) => r.source_system_name + +r.source_table_name
-  );
+  const sorted =
+    selectedSortingType === "Source Name"
+      ? sort(filteredList).asc(
+          (r) => r.source_system_name + +r.source_table_name
+        )
+      : sort(filteredList).desc((r) => r.updated_date);
 
   const exportToJson = () => {
     const json = JSON.stringify(sorted, null, 2); // Pretty print JSON
@@ -255,6 +283,21 @@ export default function Streaming() {
           marginTop: 5,
         }}
       >
+        <div style={{ marginRight: 20 }}>
+          <label>
+            Sort by:
+            <select
+              value={selectedSortingType}
+              onChange={handleSortingTypeChange}
+            >
+              {availableSortingParams.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
         <div style={{ marginRight: 20 }}>
           <label>
             <input
@@ -344,13 +387,24 @@ export default function Streaming() {
         streamingData={list}
         rowToDuplicate={rowToDuplicate}
       />
-      <button
-        disabled={loading}
-        style={{ marginTop: "5px", padding: "2px 6px" }}
-        onClick={exportToJson}
-      >
-        Export JSON
-      </button>
+      <div className="footer">
+        <span style={{ fontSize: 14, marginLeft: 50, marginRight: 50 }}>
+          GRP0-10: <span>{groupCounts[0]}</span>
+        </span>
+        <span style={{ fontSize: 14, marginLeft: 50, marginRight: 50 }}>
+          GRP11-15: <span>{groupCounts[1]}</span>
+        </span>
+        <span style={{ fontSize: 14, marginLeft: 50, marginRight: 50 }}>
+          WFMGRP: <span>{groupCounts[2]}</span>
+        </span>
+        <button
+          disabled={loading}
+          style={{ marginTop: "5px", padding: "2px 6px" }}
+          onClick={exportToJson}
+        >
+          Export JSON
+        </button>
+      </div>
     </main>
   );
 }
