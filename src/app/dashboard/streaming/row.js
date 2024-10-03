@@ -29,6 +29,7 @@ export default function Row({
   index,
   updateRow,
   deleteRow,
+  unvoidRow,
   updateLastRunAction,
   handleDuplicateRow,
 }) {
@@ -104,6 +105,13 @@ export default function Row({
     deleteRow(streamingRow, env);
   };
 
+  const handleUnvoidRow = () => {
+    if (!window.confirm("Are you sure you want to un-void this row?")) {
+      return;
+    }
+    unvoidRow(streamingRow, env);
+  };
+
   // if index is even then row color is white, else row color is lightgray
   const rowColor = index % 2 !== 0 ? "" : "#bbb";
   const isVoid = !!streamingRow.voided_by;
@@ -111,8 +119,10 @@ export default function Row({
   let activeRowBorderColor = "grey";
   if (streamingRow.error_text !== null || streamingRow.run_frequency_in_secs === 3600) {
     activeRowBorderColor = "red";
-  } else if (streamingRow.active === "Y" && streamingRow.run_frequency_in_secs !== 3600) {
+  } else if (streamingRow.active === "Y" && streamingRow.voided_by === null) {
     activeRowBorderColor = "lightgreen";
+  } else if(streamingRow.active === "Y" && streamingRow.voided_by !== null) {
+    activeRowBorderColor = "violet";
   }
 
   return (
@@ -145,6 +155,7 @@ export default function Row({
             value={streamingRow.source_system_dbtype}
             name="source_system_dbtype"
             onChange={handleChange}
+            disabled={isVoid}
           >
             {dbTypePayload.map((item) => (
               <option key={item.value} value={item.value}>
@@ -160,6 +171,7 @@ export default function Row({
             // className={styles.mediumInput}
             value={streamingRow.target_keyspace}
             onChange={handleChange}
+            disabled={isVoid}
           />
         </td>
         <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
@@ -169,6 +181,7 @@ export default function Row({
             className={styles.mediumInput}
             value={streamingRow.target_table_name}
             onChange={handleChange}
+            disabled={isVoid}
           />
         </td>
         <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
@@ -176,6 +189,7 @@ export default function Row({
             name="active"
             onChange={handleChange}
             value={streamingRow.active}
+            disabled={isVoid}
           >
             {activePayload.map((item) => (
               <option key={item.value} value={item.value}>
@@ -189,6 +203,7 @@ export default function Row({
             name="groupid"
             onChange={handleChange}
             value={streamingRow.groupid}
+            disabled={isVoid}
           >
             {groupNames.map((item) => (
               <option key={item.value} value={item.value}>
@@ -199,10 +214,14 @@ export default function Row({
         </td>
 
         <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
-          <button onClick={handleCopy} style={{ marginRight: 4 }}>
+          <button
+          disabled={isVoid}
+           onClick={handleCopy} style={{ marginRight: 4 }}>
             Copy Query
           </button>
-          <button onClick={() => onOpenModal()} style={{ marginRight: 4 }}>
+          <button
+          disabled={isVoid}
+           onClick={() => onOpenModal()} style={{ marginRight: 4 }}>
             Edit Query
           </button>
           <button
@@ -228,6 +247,7 @@ export default function Row({
             <ExpandedRowContent
               streamingRow={streamingRow}
               handleDeleteRow={handleDeleteRow}
+              handleUnvoidRow={handleUnvoidRow}
               handleChange={handleChange}
               commitChanges={commitChanges}
               changed={changed}

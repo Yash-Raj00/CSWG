@@ -28,6 +28,10 @@ const deleteRowQuery = `UPDATE wip_configurations.spark_streaming_table_config
   SET voided_by = ?, active = ?, updated_date = ?
   WHERE source_system_name = ? and source_table_name = ?`;
 
+const unvoidRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
+  SET voided_by = ?, active = ?, updated_date = ?
+  WHERE source_system_name = ? and source_table_name = ?`;
+
 const selectAction = async (env) => {
   return await SelectQuery(selectRowsQuery, env);
 };
@@ -141,11 +145,30 @@ const deleteAction = async (row, env) => {
   return await DeleteQuery(deleteRowQuery, params, env);
 };
 
+const unvoidAction = async (row, env) => {
+  const { source_system_name, source_table_name, updated_date, voided_by, active } = row;
+
+  console.log("unvoidAction: ", row);
+
+  // if voided_by is not set, it will unvoid the row
+
+  const params = [
+    voided_by,
+    active,
+    updated_date,
+    source_system_name,
+    source_table_name,
+  ];
+
+  return await UpdateQuery(unvoidRowQuery, params, env);
+};
+
 export {
   selectAction,
   updateAction,
   insertAction,
   deleteAction,
+  unvoidAction,
   updateLastRunAction,
   ConnectToCassandra,
 };

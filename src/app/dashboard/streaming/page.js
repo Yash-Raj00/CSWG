@@ -9,6 +9,7 @@ import { saveAs } from "file-saver";
 import {
   ConnectToCassandra,
   deleteAction,
+  unvoidAction,
   selectAction,
   updateAction,
   updateLastRunAction,
@@ -143,6 +144,37 @@ export default function Streaming() {
     }
 
     toast.success("Row deleted");
+
+    setList((prevList) => {
+      const newList = prevList.map((item) => {
+        if (
+          item.source_system_name === updatedRow.source_system_name &&
+          item.source_table_name === updatedRow.source_table_name
+        ) {
+          return updatedRow;
+        }
+        return item;
+      });
+      return newList;
+    });
+  };
+
+  const unvoidRow = async (row) => {
+    const updatedRow = {
+      ...row,
+      voided_by: "",
+      active: "N",
+      updated_date: Date.now() / 1000,
+    };
+
+    const result = await unvoidAction(updatedRow, env);
+
+    if (!result) {
+      toast.error("Failed to unvoid row");
+      return;
+    }
+
+    toast.success("Row un-voided");
 
     setList((prevList) => {
       const newList = prevList.map((item) => {
@@ -363,6 +395,7 @@ export default function Streaming() {
         data={[...sorted]}
         updateRow={updateRow}
         deleteRow={deleteRow}
+        unvoidRow={unvoidRow}
         updateLastRunAction={updateLastRunAction}
         handleDuplicateRow={handleDuplicateRow}
       />

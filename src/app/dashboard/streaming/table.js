@@ -7,6 +7,7 @@ export default function Table({
   data,
   updateRow,
   deleteRow,
+  unvoidRow,
   updateLastRunAction,
   handleDuplicateRow
 }) {
@@ -31,6 +32,7 @@ export default function Table({
             index={index}
             updateRow={updateRow}
             deleteRow={deleteRow}
+            unvoidRow={unvoidRow}
             updateLastRunAction={updateLastRunAction}
             handleDuplicateRow={handleDuplicateRow}
             key={`${row.source_system_name}${row.source_table_name}${row.target_table_name}`}

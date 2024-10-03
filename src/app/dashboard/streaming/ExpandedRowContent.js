@@ -4,6 +4,7 @@ import styles from "../../page.module.css";
 function ExpandedRowContent({
   streamingRow,
   handleDeleteRow,
+  handleUnvoidRow,
   handleChange,
   commitChanges,
   changed,
@@ -17,6 +18,8 @@ function ExpandedRowContent({
     height: "90px",
   };
 
+  const isVoid = streamingRow.voided_by;
+
   return (
     <div
       style={{
@@ -28,7 +31,7 @@ function ExpandedRowContent({
     >
       <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.tinySpan}>
-          {streamingRow.voided_by && (
+          {isVoid && (
             <>
               voided_by
               <br /> {streamingRow.voided_by}
@@ -45,7 +48,11 @@ function ExpandedRowContent({
         <br />
         <span className={styles.smallCell}>
           Updated: <br />
-          {streamingRow.updated_date ? new Date(streamingRow.updated_date * 1000).toLocaleDateString() + " " + new Date(streamingRow.updated_date * 1000).toLocaleTimeString() : ""}
+          {streamingRow.updated_date
+            ? new Date(streamingRow.updated_date * 1000).toLocaleDateString() +
+              " " +
+              new Date(streamingRow.updated_date * 1000).toLocaleTimeString()
+            : ""}
         </span>
       </div>
       <div className={styles.streamingTdMid} style={tableRowStyle}>
@@ -57,6 +64,7 @@ function ExpandedRowContent({
             className={styles.shortInput}
             value={streamingRow.facility}
             onChange={handleChange}
+            disabled={isVoid}
           />
         </span>
       </div>
@@ -69,6 +77,7 @@ function ExpandedRowContent({
             className={styles.shortInput}
             value={streamingRow.run_frequency_in_secs}
             onChange={handleChange}
+            disabled={isVoid}
           />
         </span>
       </div>
@@ -81,6 +90,7 @@ function ExpandedRowContent({
             className={styles.shortInput}
             value={streamingRow.default_run_frequency_in_secs}
             onChange={handleChange}
+            disabled={isVoid}
           />
         </span>
       </div>
@@ -93,6 +103,7 @@ function ExpandedRowContent({
             className={styles.shortInput}
             value={streamingRow.alert_frequency_in_secs}
             onChange={handleChange}
+            disabled={isVoid}
           />
         </span>
       </div>
@@ -105,6 +116,7 @@ function ExpandedRowContent({
             className={styles.shortInput}
             value={streamingRow.batch_size}
             onChange={handleChange}
+            disabled={isVoid}
           />
         </span>
       </div>
@@ -115,6 +127,7 @@ function ExpandedRowContent({
           value={streamingRow.notes}
           onChange={handleChange}
           rows={3}
+          disabled={isVoid}
           style={{
             height: "70px",
             width: "250px",
@@ -136,12 +149,21 @@ function ExpandedRowContent({
             padding: "2px",
           }}
         >
-          <button onClick={() => handleDuplicateRow(streamingRow)} style={{ width: "60px" }}>
+          <button
+            onClick={() => handleDuplicateRow(streamingRow)}
+            style={{ width: "60px" }}
+          >
             Duplicate
           </button>
-          <button onClick={handleDeleteRow} style={{ width: "60px" }}>
-            Delete
-          </button>
+          {isVoid ? (
+            <button onClick={handleUnvoidRow} style={{ width: "60px" }}>
+              Unvoid
+            </button>
+          ) : (
+            <button onClick={handleDeleteRow} style={{ width: "60px" }}>
+              Delete
+            </button>
+          )}
         </div>
       </div>
     </div>
