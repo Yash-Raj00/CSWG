@@ -108,14 +108,11 @@ export default function Row({
   const rowColor = index % 2 !== 0 ? "" : "#bbb";
   const isVoid = !!streamingRow.voided_by;
 
-  let activeRowBorderColor = null;
-  if (streamingRow.error_text !== null || streamingRow.default_run_frequency_in_secs === 3600) {
+  let activeRowBorderColor = "grey";
+  if (streamingRow.error_text !== null || streamingRow.run_frequency_in_secs === 3600) {
     activeRowBorderColor = "red";
-  } else if (streamingRow.active === "Y") {
+  } else if (streamingRow.active === "Y" && streamingRow.run_frequency_in_secs !== 3600) {
     activeRowBorderColor = "lightgreen";
-  }
-  else {
-    activeRowBorderColor = "grey";
   }
 
   return (

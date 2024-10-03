@@ -18,10 +18,7 @@ import Table from "./table";
 import InsertModal from "./insertModal";
 import { dbTypePayload, groupTypePayload } from "./constants";
 
-const AVAILABLE_SORT_OPTIONS = [
-  "Time Updated",
-  "Source Name",
-]
+const AVAILABLE_SORT_OPTIONS = ["Time Updated", "Source Name"];
 
 export default function Streaming() {
   const searchParams = useSearchParams();
@@ -42,7 +39,9 @@ export default function Streaming() {
   const [groupCounts, setGroupCounts] = useState([]);
   const [availableSources, setAvailableSources] = useState([]);
 
-  const [selectedSortingType, setSelectedSortingType] = useState(AVAILABLE_SORT_OPTIONS[0]);
+  const [selectedSortingType, setSelectedSortingType] = useState(
+    AVAILABLE_SORT_OPTIONS[0]
+  );
   const [selectedType, setSelectedType] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedSource, setSelectedSource] = useState("");
@@ -73,17 +72,11 @@ export default function Streaming() {
     setList(data);
     setLoading(false);
 
-    const grpCounts = [0, 0, 0];
+    const grpCounts = Array(9).fill(0);
     data.forEach((item) => {
       const lastChar = item.groupid?.slice(-1);
       if (!lastChar) return;
-      if ((lastChar >= 0 && lastChar <= 10) || item.groupid?.includes("GRP0")) {
-        grpCounts[0]++;
-      } else if (lastChar >= "11" && lastChar <= "15") {
-        grpCounts[1]++;
-      } else if (lastChar === "p") {
-        grpCounts[2]++;
-      }
+      grpCounts[parseInt(lastChar)]++;
     });
     setGroupCounts(grpCounts);
 
@@ -376,23 +369,20 @@ export default function Streaming() {
         rowToDuplicate={rowToDuplicate}
       />
       <div className="footer">
-        <span style={{ fontSize: 14, marginLeft: 50, marginRight: 50 }}>
-          GRP0-10: <span>{groupCounts[0]}</span>
-        </span>
-        <span style={{ fontSize: 14, marginLeft: 50, marginRight: 50 }}>
-          GRP11-15: <span>{groupCounts[1]}</span>
-        </span>
-        <span style={{ fontSize: 14, marginLeft: 50, marginRight: 50 }}>
-          WFMGRP: <span>{groupCounts[2]}</span>
-        </span>
-        <button
-          disabled={loading}
-          style={{ marginTop: "5px", padding: "2px 6px" }}
-          onClick={exportToJson}
-        >
-          Export JSON
-        </button>
+        {groupCounts.map((grp, i) => (
+          <span style={{ fontSize: 14, marginLeft: 25, marginRight: 25 }}>
+            {i == 7 ? "WFMGrp" : i < 7 ? "GRP" + (i + 1) : "GRP0-TEST"}:{" "}
+            <span>{groupCounts[i]}</span>
+          </span>
+        ))}
       </div>
+      <button
+        disabled={loading}
+        style={{ marginTop: "20px", padding: "2px 6px" }}
+        onClick={exportToJson}
+      >
+        Export JSON
+      </button>
     </main>
   );
 }
