@@ -119,9 +119,9 @@ export default function Row({
   let activeRowBorderColor = "grey";
   if (streamingRow.error_text !== null || streamingRow.run_frequency_in_secs === 3600) {
     activeRowBorderColor = "red";
-  } else if (streamingRow.active === "Y" && streamingRow.voided_by === null) {
+  } else if (streamingRow.active === "Y" && !streamingRow.voided_by) {
     activeRowBorderColor = "lightgreen";
-  } else if(streamingRow.active === "Y" && streamingRow.voided_by !== null) {
+  } else if(streamingRow.active === "Y" && streamingRow.voided_by) {
     activeRowBorderColor = "violet";
   }
 
