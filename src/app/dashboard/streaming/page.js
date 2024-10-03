@@ -17,6 +17,7 @@ import styles from "../../page.module.css";
 import Table from "./table";
 import InsertModal from "./insertModal";
 import { dbTypePayload, groupTypePayload } from "./constants";
+import { groupNames } from "./row";
 
 const AVAILABLE_SORT_OPTIONS = ["Time Updated", "Source Name"];
 
@@ -36,7 +37,7 @@ export default function Streaming() {
   const [notVoidOnly, setNotVoidOnly] = useState(true);
   const [rowToDuplicate, setRowToDuplicate] = useState();
   const [loading, setLoading] = useState(false);
-  const [groupCounts, setGroupCounts] = useState([]);
+  const [groupCounts, setGroupCounts] = useState(new Map());
   const [availableSources, setAvailableSources] = useState([]);
 
   const [selectedSortingType, setSelectedSortingType] = useState(
@@ -72,11 +73,15 @@ export default function Streaming() {
     setList(data);
     setLoading(false);
 
-    const grpCounts = Array(9).fill(0);
+    const grpCounts = new Map();
+    groupNames.map((group) => {
+      grpCounts.set(group.value, 0);
+    });
     data.forEach((item) => {
-      const lastChar = item.groupid?.slice(-1);
-      if (!lastChar) return;
-      grpCounts[parseInt(lastChar)]++;
+      grpCounts.set(
+        item.groupid || "unknown",
+        (grpCounts.get(item.groupid || "unknown") || 0) + 1
+      );
     });
     setGroupCounts(grpCounts);
 
@@ -355,7 +360,7 @@ export default function Streaming() {
         )}
       </div>
       <Table
-        data={sorted}
+        data={[...sorted]}
         updateRow={updateRow}
         deleteRow={deleteRow}
         updateLastRunAction={updateLastRunAction}
@@ -369,10 +374,12 @@ export default function Streaming() {
         rowToDuplicate={rowToDuplicate}
       />
       <div className="footer">
-        {groupCounts.map((grp, i) => (
-          <span style={{ fontSize: 14, marginLeft: 25, marginRight: 25 }}>
-            {i == 7 ? "WFMGrp" : i < 7 ? "GRP" + (i + 1) : "GRP0-TEST"}:{" "}
-            <span>{groupCounts[i]}</span>
+        {[...groupCounts].map(([key, value]) => (
+          <span
+            key={key}
+            style={{ fontSize: 14, marginLeft: 25, marginRight: 25 }}
+          >
+            {key}: {value}
           </span>
         ))}
       </div>

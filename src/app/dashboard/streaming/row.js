@@ -12,7 +12,7 @@ const activePayload = [
   { value: "Y", label: "Y" },
   { value: "N", label: "N" },
 ];
-const groupNames = [
+export const groupNames = [
   { value: "GRP1", label: "GRP1" },
   { value: "GRP2", label: "GRP2" },
   { value: "GRP3", label: "GRP3" },
