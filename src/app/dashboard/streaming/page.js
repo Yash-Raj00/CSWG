@@ -16,7 +16,7 @@ import {
 import styles from "../../page.module.css";
 import Table from "./table";
 import InsertModal from "./insertModal";
-import { groupTypePayload } from "./constants";
+import { dbTypePayload, groupTypePayload } from "./constants";
 
 const AVAILABLE_SORT_OPTIONS = [
   "Time Updated",
@@ -325,8 +325,8 @@ export default function Streaming() {
             <select value={selectedType} onChange={handleTypeChange}>
               <option value="">All</option>
               {dbTypePayload.map((type) => (
-                <option key={type} value={type}>
-                  {type}
+                <option key={type.value} value={type.value}>
+                  {type.label}
                 </option>
               ))}
             </select>
@@ -338,8 +338,8 @@ export default function Streaming() {
             <select value={selectedGroup} onChange={handleGroupChange}>
               <option value="">All</option>
               {groupTypePayload.map((group) => (
-                <option key={group} value={group}>
-                  {group}
+                <option key={group.value} value={group.value}>
+                  {group.label}
                 </option>
               ))}
             </select>
