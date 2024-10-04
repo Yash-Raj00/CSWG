@@ -3,10 +3,9 @@ import poolConfig, { poolProdConfig } from "./pool-config";
 
 let client;
 let isConnected = false;
-let currEnv;
 
 const ConnectToCassandra = async (env) => {
-  currEnv = env.toLocaleUpperCase();
+  let currEnv = env.toLocaleUpperCase();
 
   // set correct config
   const config = currEnv === "UAT" ? poolConfig : poolProdConfig;
@@ -49,7 +48,7 @@ const CloseCassandraConnection = async () => {
 
 const SelectQuery = async (selectRowsQuery, env) => {
   try {
-    await ConnectToCassandra(env || currEnv);
+    await ConnectToCassandra(env);
     const result = await client.execute(selectRowsQuery, [], { prepare: true });
     // console.log("SelectQuery ~ result:", selectRowsQuery, result.rows);
 
@@ -66,7 +65,7 @@ const SelectQuery = async (selectRowsQuery, env) => {
 
 const UpdateQuery = async (updateRowQuery, params, env) => {
   try {
-    await ConnectToCassandra(env || currEnv);
+    await ConnectToCassandra(env);
     await client.execute(updateRowQuery, params, { prepare: true });
     return true;
   } catch (error) {
@@ -77,7 +76,7 @@ const UpdateQuery = async (updateRowQuery, params, env) => {
 
 const InsertQuery = async (insertRowQuery, params, env) => {
   try {
-    await ConnectToCassandra(env || currEnv);
+    await ConnectToCassandra(env);
     await client.execute(insertRowQuery, params, { prepare: true });
     console.log("Insert successful");
     return true;
@@ -89,7 +88,7 @@ const InsertQuery = async (insertRowQuery, params, env) => {
 
 const DeleteQuery = async (deleteRowsQuery, params, env) => {
   try {
-    await ConnectToCassandra(env || currEnv);
+    await ConnectToCassandra(env);
     await client.execute(deleteRowsQuery, params, { prepare: true });
     console.log("delete successful");
     return true;

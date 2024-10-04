@@ -5,10 +5,13 @@ import Cookie from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { authenticate } from "./actions";
 import { useEffect, useState } from "react";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const token = Cookie.get("token");
@@ -39,7 +42,7 @@ export default function Home() {
         const user = loginRes.User;
 
         const decodedToken = jwtDecode(token);
-        const expirationDate = new Date(decodedToken.exp * 1000 + (2 * 3600000));
+        const expirationDate = new Date(decodedToken.exp * 1000 + 2 * 3600000);
 
         // Store the token in cookies with expiration date
         Cookie.set("token", token, { expires: expirationDate });
@@ -68,10 +71,22 @@ export default function Home() {
         <p>{loading ? "Logging In..." : "Streaming Manager"}</p>
       </div>
 
-      <div className={styles.grid}>
-        <form onSubmit={login}>
+      <div className={""} style={{width: '70%'}}>
+        <form className={styles.flex_col} onSubmit={login}>
           <input type="email" name="email" placeholder="Email" />
-          <input type="password" name="password" placeholder="Password" />
+          <div style={{ position: "relative" }}>
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              style={{ position: "absolute", right: 3, top: 3 }}
+            >
+              {showPassword ? <IoEyeOutline /> : <IoEyeOffOutline />}
+            </span>
+          </div>
           <button
             disabled={loading}
             style={{ cursor: loading ? "not-allowed" : "default" }}

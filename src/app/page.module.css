@@ -122,6 +122,7 @@
 .td {
   padding-bottom: 8px;
   border-bottom: 1px solid #888;
+  text-align: center;
 }
 .streamingTd {
   padding-bottom: 8px;
@@ -147,6 +148,13 @@
   grid-template-columns: repeat(4, minmax(25%, auto));
   max-width: 100%;
   width: var(--max-width);
+}
+
+.flex_col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
 }
 
 .connected {

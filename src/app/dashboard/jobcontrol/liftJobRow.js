@@ -1,11 +1,7 @@
 import { useState } from "react";
 
 import styles from "../../page.module.css";
-
-const activePayload = [
-  { value: "Y", label: "Y" },
-  { value: "N", label: "N" },
-];
+import { activePayload } from "../streaming/constants";
 
 export default function Row({ row, updateRow }) {
   const [changed, setChanged] = useState(false);
