@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../../page.module.css";
 import React from "react";
 import Row from "./row";
@@ -11,8 +11,16 @@ export default function Table({
   updateLastRunAction,
   handleDuplicateRow
 }) {
+
+  const [datas, setdatas] = useState([])
+  const [tableKey, setTableKey] = useState(0);
+  useEffect(() => {
+    setdatas(data);
+    setTableKey(prev => prev + 1); // Change the key to force re-render
+  }, [data]);
+
   return (
-    <table className={styles.table}>
+    <table className={styles.table} key={tableKey}>
       <thead>
         <tr>
           <th className={styles.pb_4}>Source Name</th>
@@ -26,7 +34,7 @@ export default function Table({
         </tr>
       </thead>
       <tbody>
-        {data.map((row, index) => (
+        {datas.map((row, index) => (
           <Row
             row={{...row}}
             index={index}

@@ -392,7 +392,7 @@ export default function Streaming() {
         )}
       </div>
       <Table
-        data={[...sorted]}
+        data={sorted}
         updateRow={updateRow}
         deleteRow={deleteRow}
         unvoidRow={unvoidRow}
