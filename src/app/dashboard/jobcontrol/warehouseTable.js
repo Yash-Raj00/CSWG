@@ -4,7 +4,6 @@ import { sort } from "fast-sort";
 import {
   selectAction,
   updateAction,
-  ConnectToCassandra,
 } from "../warehouseJobActions";
 import styles from "../../page.module.css";
 import Row from "./warehouseJobRow";
@@ -17,7 +16,6 @@ export default function WarehouseTable({ env }) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await ConnectToCassandra(env);
       const data = await selectAction(env);
 
       console.log("WarehouseTable fetchData", data);

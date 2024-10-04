@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import {
   selectAction,
   updateAction,
-  ConnectToCassandra,
 } from "../shippingJobActions";
 import styles from "../../page.module.css";
 import Row from "./shippingJobRow";
@@ -18,7 +17,6 @@ export default function ShippingTable({ env }) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await ConnectToCassandra(env);
       const data = await selectAction(env);
 
       console.log("ShippingTable fetchData", data);

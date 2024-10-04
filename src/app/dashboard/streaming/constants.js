@@ -21,3 +21,8 @@ export const groupTypePayload = [
   { value: "WFMGrp", label: "WFMGrp" },
   { value: "GRP0", label: "GRP0-TEST" },
 ];
+
+export const activePayload = [
+  { value: "Y", label: "Y" },
+  { value: "N", label: "N" },
+];

@@ -3,26 +3,10 @@ import { Modal } from "react-responsive-modal";
 
 import styles from "../../page.module.css";
 import "react-responsive-modal/styles.css";
-import { dbTypePayload } from "./constants";
+import { dbTypePayload, groupTypePayload, activePayload } from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
 import { useSearchParams } from "next/navigation";
-
-const activePayload = [
-  { value: "Y", label: "Y" },
-  { value: "N", label: "N" },
-];
-export const groupNames = [
-  { value: "GRP1", label: "GRP1" },
-  { value: "GRP2", label: "GRP2" },
-  { value: "GRP3", label: "GRP3" },
-  { value: "GRP4", label: "GRP4" },
-  { value: "GRP5", label: "GRP5" },
-  { value: "GRP6", label: "GRP6" },
-  { value: "GRP7", label: "GRP7" },
-  { value: "WFMGrp", label: "WFMGrp" },
-  { value: "GRP0", label: "GRP0-TEST" },
-];
 
 export default function Row({
   row,
@@ -114,7 +98,7 @@ export default function Row({
 
   // if index is even then row color is white, else row color is lightgray
   const rowColor = index % 2 !== 0 ? "" : "#bbb";
-  const isVoid = !!streamingRow.voided_by;
+  const isVoid = streamingRow.voided_by;
 
   let activeRowBorderColor = "grey";
   if (streamingRow.error_text !== null || streamingRow.run_frequency_in_secs === 3600) {
@@ -205,7 +189,7 @@ export default function Row({
             value={streamingRow.groupid}
             disabled={isVoid}
           >
-            {groupNames.map((item) => (
+            {groupTypePayload.map((item) => (
               <option key={item.value} value={item.value}>
                 {item.label}
               </option>

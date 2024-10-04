@@ -7,7 +7,6 @@ import { sort } from "fast-sort";
 import { saveAs } from "file-saver";
 
 import {
-  ConnectToCassandra,
   deleteAction,
   unvoidAction,
   selectAction,
@@ -18,7 +17,6 @@ import styles from "../../page.module.css";
 import Table from "./table";
 import InsertModal from "./insertModal";
 import { dbTypePayload, groupTypePayload } from "./constants";
-import { groupNames } from "./row";
 
 const AVAILABLE_SORT_OPTIONS = ["Time Updated", "Source Name"];
 
@@ -66,7 +64,6 @@ export default function Streaming() {
 
   async function fetchData() {
     setLoading(true);
-    await ConnectToCassandra(currentEnv);
     const data = await selectAction(currentEnv);
 
     console.log("fetchData", JSON.stringify(data));
@@ -75,7 +72,7 @@ export default function Streaming() {
     setLoading(false);
 
     const grpCounts = new Map();
-    groupNames.map((group) => {
+    groupTypePayload.map((group) => {
       grpCounts.set(group.value, 0);
     });
     data.forEach((item) => {

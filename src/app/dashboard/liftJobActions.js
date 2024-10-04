@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import {
-  ConnectToCassandra,
   UpdateQuery,
   SelectQuery,
 } from "@/lib/common/db/pool";
@@ -32,4 +31,4 @@ const updateAction = async (row, env) => {
   return await UpdateQuery(updateRowQuery, params, env);
 };
 
-export { selectAction, updateAction, ConnectToCassandra };
+export { selectAction, updateAction, };

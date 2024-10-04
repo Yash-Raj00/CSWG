@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import {
-  ConnectToCassandra,
   UpdateQuery,
   SelectQuery,
   InsertQuery,
@@ -166,5 +165,4 @@ export {
   deleteAction,
   unvoidAction,
   updateLastRunAction,
-  ConnectToCassandra,
 };
