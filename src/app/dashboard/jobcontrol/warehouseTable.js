@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import { sort } from "fast-sort";
 import {
   selectAction,
   updateAction,
@@ -50,6 +50,8 @@ export default function WarehouseTable({ env }) {
     );
   };
 
+  const sortedList = sort(list).asc([(u) => u.job_id, (u) => u.warehouse_id]);
+
   return (
     <main className={styles.streaming}>
       <h1>Warehouse Job Control</h1>
@@ -70,7 +72,7 @@ export default function WarehouseTable({ env }) {
           </tr>
         </thead>
         <tbody>
-          {list.map((row) => (
+          {sortedList.map((row) => (
             <Row
               row={row}
               updateRow={updateRow}
