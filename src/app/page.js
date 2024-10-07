@@ -71,7 +71,7 @@ export default function Home() {
         <p>{loading ? "Logging In..." : "Streaming Manager"}</p>
       </div>
 
-      <div className={""} style={{width: '70%'}}>
+      <div style={{width: '70%'}}>
         <form className={styles.flex_col} onSubmit={login}>
           <input type="email" name="email" placeholder="Email" />
           <div style={{ position: "relative" }}>

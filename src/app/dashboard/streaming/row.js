@@ -98,7 +98,7 @@ export default function Row({
 
   // if index is even then row color is white, else row color is lightgray
   const rowColor = index % 2 !== 0 ? "" : "#bbb";
-  const isVoid = streamingRow.voided_by;
+  const isVoid = !!streamingRow.voided_by;
 
   let activeRowBorderColor = "grey";
   if (streamingRow.error_text !== null || streamingRow.run_frequency_in_secs === 3600) {

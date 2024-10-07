@@ -12,11 +12,9 @@ export default function Table({
   handleDuplicateRow
 }) {
 
-  const [datas, setdatas] = useState([])
   const [tableKey, setTableKey] = useState(0);
   useEffect(() => {
-    setdatas(data);
-    setTableKey(prev => prev + 1); // Change the key to force re-render
+    setTableKey(prev => prev + 1);
   }, [data]);
 
   return (
@@ -34,7 +32,7 @@ export default function Table({
         </tr>
       </thead>
       <tbody>
-        {datas.map((row, index) => (
+        {data.map((row, index) => (
           <Row
             row={{...row}}
             index={index}
