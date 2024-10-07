@@ -17,6 +17,7 @@ import styles from "../../page.module.css";
 import Table from "./table";
 import InsertModal from "./insertModal";
 import { dbTypePayload, groupTypePayload } from "./constants";
+import Footer from "./Footer";
 
 const AVAILABLE_SORT_OPTIONS = ["Time Updated", "Source Name"];
 
@@ -36,7 +37,6 @@ export default function Streaming() {
   const [notVoidOnly, setNotVoidOnly] = useState(true);
   const [rowToDuplicate, setRowToDuplicate] = useState();
   const [loading, setLoading] = useState(false);
-  const [groupCounts, setGroupCounts] = useState(new Map());
   const [availableSources, setAvailableSources] = useState([]);
 
   const [selectedSortingType, setSelectedSortingType] = useState(
@@ -70,18 +70,6 @@ export default function Streaming() {
 
     setList(data);
     setLoading(false);
-
-    const grpCounts = new Map();
-    groupTypePayload.map((group) => {
-      grpCounts.set(group.value, 0);
-    });
-    data.forEach((item) => {
-      grpCounts.set(
-        item.groupid || "unknown",
-        (grpCounts.get(item.groupid || "unknown") || 0) + 1
-      );
-    });
-    setGroupCounts(grpCounts);
 
     const sources = [
       ...new Set(
@@ -263,11 +251,6 @@ export default function Streaming() {
         )
       : sort(filteredList).desc((r) => r.updated_date);
 
-  const exportToJson = () => {
-    const json = JSON.stringify(sorted, null, 2); // Pretty print JSON
-    const blob = new Blob([json], { type: "application/json" });
-    saveAs(blob, "streaming_data.json");
-  };
 
   return (
     <main
@@ -403,23 +386,7 @@ export default function Streaming() {
         streamingData={list}
         rowToDuplicate={rowToDuplicate}
       />
-      <div className="footer">
-        {[...groupCounts].map(([key, value]) => (
-          <span
-            key={key}
-            style={{ fontSize: 14, marginLeft: 25, marginRight: 25 }}
-          >
-            {key}: {value}
-          </span>
-        ))}
-      </div>
-      <button
-        disabled={loading}
-        style={{ marginTop: "20px", padding: "2px 6px" }}
-        onClick={exportToJson}
-      >
-        Export JSON
-      </button>
+      <Footer data={sorted} loading={loading}/>
     </main>
   );
 }

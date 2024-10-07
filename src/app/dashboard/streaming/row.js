@@ -101,18 +101,26 @@ export default function Row({
   const isVoid = !!streamingRow.voided_by;
 
   let activeRowBorderColor = "grey";
-  if (streamingRow.error_text !== null || streamingRow.run_frequency_in_secs === 3600) {
+  if (
+    streamingRow.error_text !== null ||
+    streamingRow.run_frequency_in_secs === 3600
+  ) {
     activeRowBorderColor = "red";
   } else if (streamingRow.active === "Y" && !streamingRow.voided_by) {
     activeRowBorderColor = "lightgreen";
-  } else if(streamingRow.active === "Y" && streamingRow.voided_by) {
+  } else if (streamingRow.active === "Y" && streamingRow.voided_by) {
     activeRowBorderColor = "violet";
   }
 
   return (
     <>
-      <tr className={styles.row} style={{ backgroundColor: rowColor, borderColor: activeRowBorderColor}}>
-        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
+      <tr
+        className={styles.row}
+        style={{ backgroundColor: rowColor, borderColor: activeRowBorderColor }}
+      >
+        <td
+          className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
+        >
           <span
             className={styles.tinySpan}
             style={{
@@ -123,7 +131,9 @@ export default function Row({
             {streamingRow.source_system_name}
           </span>
         </td>
-        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
+        <td
+          className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
+        >
           <span
             className={styles.limitedSpan}
             style={{
@@ -134,7 +144,9 @@ export default function Row({
             {streamingRow.source_table_name}
           </span>
         </td>
-        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
+        <td
+          className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
+        >
           <select
             value={streamingRow.source_system_dbtype}
             name="source_system_dbtype"
@@ -148,7 +160,9 @@ export default function Row({
             ))}
           </select>
         </td>
-        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
+        <td
+          className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
+        >
           <input
             name="target_keyspace"
             type="text"
@@ -158,7 +172,9 @@ export default function Row({
             disabled={isVoid}
           />
         </td>
-        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
+        <td
+          className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
+        >
           <input
             name="target_table_name"
             type="text"
@@ -168,7 +184,9 @@ export default function Row({
             disabled={isVoid}
           />
         </td>
-        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
+        <td
+          className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
+        >
           <select
             name="active"
             onChange={handleChange}
@@ -182,7 +200,9 @@ export default function Row({
             ))}
           </select>
         </td>
-        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
+        <td
+          className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
+        >
           <select
             name="groupid"
             onChange={handleChange}
@@ -197,35 +217,47 @@ export default function Row({
           </select>
         </td>
 
-        <td className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}>
+        <td
+          className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
+        >
           <button
-          disabled={isVoid}
-           onClick={handleCopy} style={{ marginRight: 4 }}>
+            disabled={isVoid}
+            onClick={handleCopy}
+            style={{ marginRight: 4 }}
+          >
             Copy Query
           </button>
           <button
-          disabled={isVoid}
-           onClick={() => onOpenModal()} style={{ marginRight: 4 }}>
+            disabled={isVoid}
+            onClick={() => onOpenModal()}
+            style={{ marginRight: 4 }}
+          >
             Edit Query
           </button>
           <button
             onClick={commitChanges}
             disabled={!changed}
-            style={{ width: "60px" }}
+            style={{ width: "60px", margin: "0px 1px 0px 0px", backgroundColor: "#98FB98",}}
           >
             Save
           </button>
         </td>
       </tr>
       {showExpanded && (
-        <tr className={`${styles.rowMid}`} style={{ backgroundColor: rowColor, borderColor: activeRowBorderColor}}>
+        <tr
+          className={`${styles.rowMid}`}
+          style={{
+            backgroundColor: rowColor,
+            borderColor: activeRowBorderColor,
+          }}
+        >
           <td
-          className=''
+            className=""
             colSpan="11"
             style={{
               flex: 1,
               flexDirection: "row",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
           >
             <ExpandedRowContent
@@ -241,8 +273,15 @@ export default function Row({
           </td>
         </tr>
       )}
-      <tr style={{ backgroundColor: rowColor, border: "2.5px solid", borderColor: activeRowBorderColor, borderTop: "none",}}>
-        <td colSpan="11" style={{paddingTop: 4 }} >
+      <tr
+        style={{
+          backgroundColor: rowColor,
+          border: "2.5px solid",
+          borderColor: activeRowBorderColor,
+          borderTop: "none",
+        }}
+      >
+        <td colSpan="11" style={{ paddingTop: 4 }}>
           <EditRow
             setShowExpanded={setShowExpanded}
             showExpanded={showExpanded}
