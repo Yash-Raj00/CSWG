@@ -7,7 +7,6 @@ import { dbTypePayload, groupTypePayload, activePayload } from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
 import { useSearchParams } from "next/navigation";
-import { isRowSelected } from "@tanstack/react-table";
 
 export default function Row({
   row,
@@ -24,9 +23,6 @@ export default function Row({
   const [streamingRow, setStreamingRow] = useState(row);
   const [showExpanded, setShowExpanded] = useState(false);
   const [isSelectedRow, setSelectedRow] = useState(false);
-  const [rowColor, setRowColor] = useState(
-    isSelectedRow ? "#e8ff8f" : index % 2 !== 0 ? "" : "#bbb"
-  );
 
   const onOpenModal = () => setModalOpen(true);
 
@@ -103,23 +99,30 @@ export default function Row({
 
   const handleRowClick = () => {
     setSelectedRow((prev) => !prev);
-    setRowColor(isSelectedRow ? "" : "#e8ff8f");
   };
 
-  // if index is even then row color is white, else row color is lightgray
   const isVoid = !!streamingRow.voided_by;
 
-  let activeRowBorderColor = "grey";
-  if (
-    streamingRow.error_text !== null ||
-    streamingRow.run_frequency_in_secs === 3600
-  ) {
-    activeRowBorderColor = "red";
-  } else if (streamingRow.active === "Y" && !streamingRow.voided_by) {
-    activeRowBorderColor = "lightgreen";
-  } else if (streamingRow.active === "Y" && streamingRow.voided_by) {
-    activeRowBorderColor = "violet";
-  }
+  const getBorderColor = () => {
+    if (streamingRow.error_text || streamingRow.run_frequency_in_secs === 3600) {
+      return "red";
+    }
+    if (streamingRow.active === "Y" && !streamingRow.voided_by) {
+      return "lightgreen";
+    }
+    if (streamingRow.active === "Y" && streamingRow.voided_by) {
+      return "violet";
+    }
+    return "grey";
+  };
+
+  const getRowColor = () => {
+    if (isSelectedRow) return "#e8ff8f";
+    return index % 2 !== 0 ? "" : "#bbb";
+  };
+
+  let activeRowColor = getRowColor();
+  let activeRowBorderColor = getBorderColor();
 
   return (
     <>
@@ -127,7 +130,7 @@ export default function Row({
         id="headRow"
         onClick={handleRowClick}
         className={styles.row}
-        style={{ backgroundColor: rowColor, borderColor: activeRowBorderColor }}
+        style={{ backgroundColor: activeRowColor, borderColor: activeRowBorderColor }}
       >
         <td
           className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
@@ -261,8 +264,9 @@ export default function Row({
       {showExpanded && (
         <tr
           className={`${styles.rowMid}`}
+          onClick={handleRowClick}
           style={{
-            backgroundColor: rowColor,
+            backgroundColor: activeRowColor,
             borderColor: activeRowBorderColor,
           }}
         >
@@ -290,11 +294,12 @@ export default function Row({
       )}
       <tr
         style={{
-          backgroundColor: rowColor,
+          backgroundColor: activeRowColor,
           border: "2.5px solid",
           borderColor: activeRowBorderColor,
           borderTop: "none",
         }}
+        onClick={handleRowClick}
       >
         <td colSpan="11" style={{ paddingTop: 4 }}>
           <EditRow
