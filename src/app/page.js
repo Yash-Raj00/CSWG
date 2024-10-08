@@ -56,6 +56,7 @@ export default function Home() {
         router.push("/dashboard");
       } else {
         alert("Login failed, please try again!");
+        setLoading(false);
       }
     } catch (err) {
       console.error("Login error: ", err);

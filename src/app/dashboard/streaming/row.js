@@ -7,6 +7,7 @@ import { dbTypePayload, groupTypePayload, activePayload } from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
 import { useSearchParams } from "next/navigation";
+import { isRowSelected } from "@tanstack/react-table";
 
 export default function Row({
   row,
@@ -22,6 +23,10 @@ export default function Row({
   const [changed, setChanged] = useState(false);
   const [streamingRow, setStreamingRow] = useState(row);
   const [showExpanded, setShowExpanded] = useState(false);
+  const [isSelectedRow, setSelectedRow] = useState(false);
+  const [rowColor, setRowColor] = useState(
+    isSelectedRow ? "#e8ff8f" : index % 2 !== 0 ? "" : "#bbb"
+  );
 
   const onOpenModal = () => setModalOpen(true);
 
@@ -96,8 +101,12 @@ export default function Row({
     unvoidRow(streamingRow, env);
   };
 
+  const handleRowClick = () => {
+    setSelectedRow((prev) => !prev);
+    setRowColor(isSelectedRow ? "" : "#e8ff8f");
+  };
+
   // if index is even then row color is white, else row color is lightgray
-  const rowColor = index % 2 !== 0 ? "" : "#bbb";
   const isVoid = !!streamingRow.voided_by;
 
   let activeRowBorderColor = "grey";
@@ -115,6 +124,8 @@ export default function Row({
   return (
     <>
       <tr
+        id="headRow"
+        onClick={handleRowClick}
         className={styles.row}
         style={{ backgroundColor: rowColor, borderColor: activeRowBorderColor }}
       >
@@ -237,7 +248,11 @@ export default function Row({
           <button
             onClick={commitChanges}
             disabled={!changed}
-            style={{ width: "60px", margin: "0px 1px 0px 0px", backgroundColor: "#98FB98",}}
+            style={{
+              width: "60px",
+              margin: "0px 1px 0px 0px",
+              backgroundColor: changed ? "#98FB98" : "",
+            }}
           >
             Save
           </button>
