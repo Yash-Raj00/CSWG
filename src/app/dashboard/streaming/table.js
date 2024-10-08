@@ -9,12 +9,11 @@ export default function Table({
   deleteRow,
   unvoidRow,
   updateLastRunAction,
-  handleDuplicateRow
+  handleDuplicateRow,
 }) {
-
   const [tableKey, setTableKey] = useState(0);
   useEffect(() => {
-    setTableKey(prev => prev + 1);
+    setTableKey((prev) => prev + 1);
   }, [data]);
 
   return (
@@ -34,7 +33,7 @@ export default function Table({
       <tbody>
         {data.map((row, index) => (
           <Row
-            row={{...row}}
+            row={{ ...row }}
             index={index}
             updateRow={updateRow}
             deleteRow={deleteRow}
