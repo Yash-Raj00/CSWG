@@ -117,7 +117,7 @@ export default function Row({
   };
 
   const getRowColor = () => {
-    if (isSelectedRow) return "#e8ff8f";
+    if (isSelectedRow) return "#f5ffcc";
     return index % 2 !== 0 ? "" : "#bbb";
   };
 
