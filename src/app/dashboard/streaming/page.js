@@ -64,7 +64,7 @@ export default function Streaming() {
 
   async function fetchData() {
     setLoading(true);
-    const data = await selectAction(currentEnv);
+    const data = await selectAction(env);
 
     console.log("fetchData", JSON.stringify(data));
 
@@ -98,19 +98,19 @@ export default function Streaming() {
 
     toast.success("Row updated");
 
-    setList((prevList) => {
-      const newList = prevList.map((item) => {
-        if (
-          item.source_system_name === row.source_system_name &&
-          item.source_table_name === row.source_table_name &&
-          item.target_table_name === row.target_table_name
-        ) {
-          return row;
-        }
-        return item;
-      });
-      return newList;
-    });
+    // setList((prevList) => {
+    //   const newList = prevList.map((item) => {
+    //     if (
+    //       item.source_system_name === row.source_system_name &&
+    //       item.source_table_name === row.source_table_name &&
+    //       item.target_table_name === row.target_table_name
+    //     ) {
+    //       return row;
+    //     }
+    //     return item;
+    //   });
+    //   return newList;
+    // });
   };
 
   const deleteRow = async (row) => {

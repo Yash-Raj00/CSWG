@@ -1,47 +1,98 @@
 import * as cassandra from "cassandra-driver";
 import poolConfig, { poolProdConfig } from "./pool-config";
 
-let client;
-let isConnected = false;
+let clientUat;
+let clientProd;
+let isConnectedUat = false;
+let isConnectedProd = false;
 
 const ConnectToCassandra = async (env) => {
   let currEnv = env.toLocaleUpperCase();
 
   // set correct config
-  const config = currEnv === "UAT" ? poolConfig : poolProdConfig;
+  // let config = currEnv === "UAT" ? poolConfig : poolProdConfig;
 
-  if (isConnected && client.options.localDataCenter === config.dc) {
-    return true; // Skip connection
+  if (
+    currEnv === "UAT" &&
+    isConnectedUat && clientUat.options.localDataCenter === poolConfig.dc) {
+    console.log("Connection exists for UAT");
+    return true; // Skip connection for UAT
+  }
+  if (
+    currEnv === "PROD" &&
+    isConnectedProd &&
+    clientProd.options.localDataCenter === poolProdConfig.dc
+  ) {
+    console.log("Connection exists for PROD");
+    return true; // Skip connection for PROD
   }
 
   console.log(`Connecting to Cassandra... ${currEnv}`);
 
-  try {
-    client = new cassandra.Client({
-      contactPoints: [config.pointOne, config.pointTwo],
-      localDataCenter: config.dc,
-      keyspace: config.keyspace,
-      credentials: { username: config.user, password: config.password },
-    });
-    await client.connect(); // Ensure the client is connected
-    isConnected = true;
-    console.log("Cassandra connection successful");
-    return true;
-  } catch (error) {
-    console.error("Cassandra connection error", error);
-    isConnected = false;
-    return false;
+  if (currEnv === "UAT") {
+    try {
+      clientUat = new cassandra.Client({
+        contactPoints: [poolConfig.pointOne, poolConfig.pointTwo],
+        localDataCenter: poolConfig.dc,
+        keyspace: poolConfig.keyspace,
+        credentials: {
+          username: poolConfig.user,
+          password: poolConfig.password,
+        },
+      });
+      await clientUat.connect(); // Ensure the client is connected
+      isConnectedUat = true;
+      console.log(
+        "Cassandra connection successful " + clientUat.options.localDataCenter
+      );
+      return true;
+    } catch (error) {
+      console.error("Cassandra connection error", error);
+      isConnectedUat = false;
+      return false;
+    }
+  } else if (currEnv === "PROD") {
+    try {
+      clientProd = new cassandra.Client({
+        contactPoints: [poolProdConfig.pointOne, poolProdConfig.pointTwo],
+        localDataCenter: poolProdConfig.dc,
+        keyspace: poolProdConfig.keyspace,
+        credentials: {
+          username: poolProdConfig.user,
+          password: poolProdConfig.password,
+        },
+      });
+      await clientProd.connect(); // Ensure the client is connected
+      isConnectedProd = true;
+      console.log(
+        "Cassandra connection successful " + clientProd.options.localDataCenter
+      );
+      return true;
+    } catch (error) {
+      console.error("Cassandra connection error", error);
+      isConnectedProd = false;
+      return false;
+    }
   }
 };
 
 const CloseCassandraConnection = async () => {
-  if (client && isConnected) {
+  if (clientUat && isConnectedUat) {
     try {
-      await client.shutdown();
-      isConnected = false;
-      console.log("Cassandra connection closed");
+      await clientUat.shutdown();
+      isConnectedUat = false;
+      console.log("Cassandra connection closed for UAT");
     } catch (error) {
-      console.error("Error closing Cassandra connection", error);
+      console.error("Error closing Cassandra connection for UAT", error);
+    }
+  }
+  if (clientProd && isConnectedProd) {
+    try {
+      await clientProd.shutdown();
+      isConnectedProd = false;
+      console.log("Cassandra connection closed for PROD");
+    } catch (error) {
+      console.error("Error closing Cassandra connection for PROD", error);
     }
   }
 };
@@ -49,7 +100,16 @@ const CloseCassandraConnection = async () => {
 const SelectQuery = async (selectRowsQuery, env) => {
   try {
     await ConnectToCassandra(env);
-    const result = await client.execute(selectRowsQuery, [], { prepare: true });
+    let result;
+    if (env === "uat") {
+      result = await clientUat.execute(selectRowsQuery, [], {
+        prepare: true,
+      });
+    } else {
+      result = await clientProd.execute(selectRowsQuery, [], {
+        prepare: true,
+      });
+    }
     // console.log("SelectQuery ~ result:", selectRowsQuery, result.rows);
 
     if (!result) {
@@ -66,7 +126,11 @@ const SelectQuery = async (selectRowsQuery, env) => {
 const UpdateQuery = async (updateRowQuery, params, env) => {
   try {
     await ConnectToCassandra(env);
-    await client.execute(updateRowQuery, params, { prepare: true });
+    if (env === "uat") {
+      await clientUat.execute(updateRowQuery, params, { prepare: true });
+    } else {
+      await clientProd.execute(updateRowQuery, params, { prepare: true });
+    }
     return true;
   } catch (error) {
     console.error(error);
@@ -77,7 +141,11 @@ const UpdateQuery = async (updateRowQuery, params, env) => {
 const InsertQuery = async (insertRowQuery, params, env) => {
   try {
     await ConnectToCassandra(env);
-    await client.execute(insertRowQuery, params, { prepare: true });
+    if (env === "uat") {
+      await clientUat.execute(insertRowQuery, params, { prepare: true });
+    } else {
+      await clientProd.execute(insertRowQuery, params, { prepare: true });
+    }
     console.log("Insert successful");
     return true;
   } catch (error) {
@@ -89,7 +157,11 @@ const InsertQuery = async (insertRowQuery, params, env) => {
 const DeleteQuery = async (deleteRowsQuery, params, env) => {
   try {
     await ConnectToCassandra(env);
-    await client.execute(deleteRowsQuery, params, { prepare: true });
+    if (env === "uat") {
+      await clientUat.execute(deleteRowsQuery, params, { prepare: true });
+    } else {
+      await clientProd.execute(deleteRowsQuery, params, { prepare: true });
+    }
     console.log("delete successful");
     return true;
   } catch (error) {
