@@ -10,21 +10,13 @@ const ConnectToCassandra = async (env) => {
   let currEnv = env.toLocaleUpperCase();
 
   // set correct config
-  // let config = currEnv === "UAT" ? poolConfig : poolProdConfig;
-
-  if (
-    currEnv === "UAT" &&
-    isConnectedUat && clientUat.options.localDataCenter === poolConfig.dc) {
+  if (currEnv === "UAT" && isConnectedUat) {
     console.log("Connection exists for UAT");
-    return true; // Skip connection for UAT
+    return clientUat; // Skip connection for UAT
   }
-  if (
-    currEnv === "PROD" &&
-    isConnectedProd &&
-    clientProd.options.localDataCenter === poolProdConfig.dc
-  ) {
+  if (currEnv === "PROD" && isConnectedProd) {
     console.log("Connection exists for PROD");
-    return true; // Skip connection for PROD
+    return clientProd; // Skip connection for PROD
   }
 
   console.log(`Connecting to Cassandra... ${currEnv}`);
@@ -45,7 +37,7 @@ const ConnectToCassandra = async (env) => {
       console.log(
         "Cassandra connection successful " + clientUat.options.localDataCenter
       );
-      return true;
+      return clientUat;
     } catch (error) {
       console.error("Cassandra connection error", error);
       isConnectedUat = false;
@@ -67,7 +59,7 @@ const ConnectToCassandra = async (env) => {
       console.log(
         "Cassandra connection successful " + clientProd.options.localDataCenter
       );
-      return true;
+      return clientProd;
     } catch (error) {
       console.error("Cassandra connection error", error);
       isConnectedProd = false;
@@ -99,17 +91,11 @@ const CloseCassandraConnection = async () => {
 
 const SelectQuery = async (selectRowsQuery, env) => {
   try {
-    await ConnectToCassandra(env);
+    const client = await ConnectToCassandra(env);
     let result;
-    if (env === "uat") {
-      result = await clientUat.execute(selectRowsQuery, [], {
-        prepare: true,
-      });
-    } else {
-      result = await clientProd.execute(selectRowsQuery, [], {
-        prepare: true,
-      });
-    }
+    result = await client.execute(selectRowsQuery, [], {
+      prepare: true,
+    });
     // console.log("SelectQuery ~ result:", selectRowsQuery, result.rows);
 
     if (!result) {
@@ -125,12 +111,8 @@ const SelectQuery = async (selectRowsQuery, env) => {
 
 const UpdateQuery = async (updateRowQuery, params, env) => {
   try {
-    await ConnectToCassandra(env);
-    if (env === "uat") {
-      await clientUat.execute(updateRowQuery, params, { prepare: true });
-    } else {
-      await clientProd.execute(updateRowQuery, params, { prepare: true });
-    }
+    const client = await ConnectToCassandra(env);
+    await client.execute(updateRowQuery, params, { prepare: true });
     return true;
   } catch (error) {
     console.error(error);
@@ -140,12 +122,8 @@ const UpdateQuery = async (updateRowQuery, params, env) => {
 
 const InsertQuery = async (insertRowQuery, params, env) => {
   try {
-    await ConnectToCassandra(env);
-    if (env === "uat") {
-      await clientUat.execute(insertRowQuery, params, { prepare: true });
-    } else {
-      await clientProd.execute(insertRowQuery, params, { prepare: true });
-    }
+    const client = await ConnectToCassandra(env);
+    await client.execute(insertRowQuery, params, { prepare: true });
     console.log("Insert successful");
     return true;
   } catch (error) {
@@ -156,12 +134,8 @@ const InsertQuery = async (insertRowQuery, params, env) => {
 
 const DeleteQuery = async (deleteRowsQuery, params, env) => {
   try {
-    await ConnectToCassandra(env);
-    if (env === "uat") {
-      await clientUat.execute(deleteRowsQuery, params, { prepare: true });
-    } else {
-      await clientProd.execute(deleteRowsQuery, params, { prepare: true });
-    }
+    const client = await ConnectToCassandra(env);
+    await client.execute(deleteRowsQuery, params, { prepare: true });
     console.log("delete successful");
     return true;
   } catch (error) {

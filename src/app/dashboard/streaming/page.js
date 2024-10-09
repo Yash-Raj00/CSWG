@@ -29,8 +29,6 @@ export default function Streaming() {
     throw new Error("ENV MISSING");
   }
 
-  const currentEnv = env.toLocaleUpperCase();
-
   const [list, setList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [activeOnly, setActiveOnly] = useState(false);
@@ -60,7 +58,7 @@ export default function Streaming() {
     };
 
     initialFetch();
-  }, [currentEnv]);
+  }, [env]);
 
   async function fetchData() {
     setLoading(true);
@@ -256,7 +254,7 @@ export default function Streaming() {
     <main
       className={`${styles.streaming} ${loading ? styles.loadingCursor : ""}`}
     >
-      {currentEnv !== "UAT" && (
+      {env !== "uat" && (
         <div
           style={{
             width: "100%",
