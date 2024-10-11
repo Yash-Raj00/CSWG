@@ -35,7 +35,7 @@ export default function Streaming() {
   const [activeOnly, setActiveOnly] = useState(false);
   const [notVoidOnly, setNotVoidOnly] = useState(true);
   const [rowToDuplicate, setRowToDuplicate] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [availableSources, setAvailableSources] = useState([]);
 
   const [selectedSortingType, setSelectedSortingType] = useState(
