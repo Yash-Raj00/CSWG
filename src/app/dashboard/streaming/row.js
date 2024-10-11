@@ -220,7 +220,7 @@ export default function Row({
           >
             {activePayload.map((item) => (
               <option key={item.value} value={item.value}>
-                {item.value}
+                {item.label}
               </option>
             ))}
           </select>
