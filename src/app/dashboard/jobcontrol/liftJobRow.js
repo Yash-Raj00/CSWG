@@ -40,7 +40,7 @@ export default function Row({ row, updateRow }) {
         >
           {activePayload.map((item) => (
             <option key={item.value} value={item.value ?? ""}>
-              {item.label ?? ""}
+              {item.value ?? ""}
             </option>
           ))}
         </select>

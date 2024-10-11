@@ -16,7 +16,10 @@ function EditRow({ setShowExpanded, showExpanded }) {
     <div style={container}>
       <button
         style={buttonStyle}
-        onClick={() => setShowExpanded(!showExpanded)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowExpanded(!showExpanded);
+        }}
       >
         {showExpanded ? <AiOutlineUp /> : <AiOutlineDown />}
       </button>

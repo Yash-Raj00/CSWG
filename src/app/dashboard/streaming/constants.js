@@ -23,6 +23,6 @@ export const groupTypePayload = [
 ];
 
 export const activePayload = [
-  { value: "Y", label: "Y" },
-  { value: "N", label: "N" },
+  { value: "Y" },
+  { value: "N"},
 ];

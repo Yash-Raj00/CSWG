@@ -7,6 +7,7 @@ import { dbTypePayload, groupTypePayload, activePayload } from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
 import { useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function Row({
   row,
@@ -56,7 +57,7 @@ export default function Row({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(streamingRow.source_table_query);
-      console.log("Copied to clipboard");
+      toast.success("Copied to clipboard");
     } catch (error) {
       console.error("Unable to copy to clipboard:", error);
     }
@@ -104,7 +105,10 @@ export default function Row({
   const isVoid = !!streamingRow.voided_by;
 
   const getBorderColor = () => {
-    if (streamingRow.error_text || streamingRow.run_frequency_in_secs === 3600) {
+    if (
+      streamingRow.error_text ||
+      streamingRow.run_frequency_in_secs === 3600
+    ) {
       return "red";
     }
     if (streamingRow.active === "Y" && !streamingRow.voided_by) {
@@ -130,7 +134,10 @@ export default function Row({
         id="headRow"
         onClick={handleRowClick}
         className={styles.row}
-        style={{ backgroundColor: activeRowColor, borderColor: activeRowBorderColor }}
+        style={{
+          backgroundColor: activeRowColor,
+          borderColor: activeRowBorderColor,
+        }}
       >
         <td
           className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
@@ -162,6 +169,7 @@ export default function Row({
           className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
         >
           <select
+            onClick={(e) => e.stopPropagation()}
             value={streamingRow.source_system_dbtype}
             name="source_system_dbtype"
             onChange={handleChange}
@@ -178,6 +186,7 @@ export default function Row({
           className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
         >
           <input
+            onClick={(e) => e.stopPropagation()}
             name="target_keyspace"
             type="text"
             // className={styles.mediumInput}
@@ -190,6 +199,7 @@ export default function Row({
           className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
         >
           <input
+            onClick={(e) => e.stopPropagation()}
             name="target_table_name"
             type="text"
             className={styles.mediumInput}
@@ -202,6 +212,7 @@ export default function Row({
           className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
         >
           <select
+            onClick={(e) => e.stopPropagation()}
             name="active"
             onChange={handleChange}
             value={streamingRow.active}
@@ -209,7 +220,7 @@ export default function Row({
           >
             {activePayload.map((item) => (
               <option key={item.value} value={item.value}>
-                {item.label}
+                {item.value}
               </option>
             ))}
           </select>
@@ -218,6 +229,7 @@ export default function Row({
           className={`${styles.streamingTd} ${styles.border_l_2} ${styles.border_r_2}`}
         >
           <select
+            onClick={(e) => e.stopPropagation()}
             name="groupid"
             onChange={handleChange}
             value={streamingRow.groupid}
@@ -236,20 +248,29 @@ export default function Row({
         >
           <button
             disabled={isVoid}
-            onClick={handleCopy}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCopy();
+            }}
             style={{ marginRight: 4 }}
           >
             Copy Query
           </button>
           <button
             disabled={isVoid}
-            onClick={() => onOpenModal()}
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenModal();
+            }}
             style={{ marginRight: 4 }}
           >
             Edit Query
           </button>
           <button
-            onClick={commitChanges}
+            onClick={(e) => {
+              e.stopPropagation();
+              commitChanges();
+            }}
             disabled={!changed}
             style={{
               width: "60px",
