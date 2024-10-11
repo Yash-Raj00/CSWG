@@ -374,6 +374,23 @@
   }
 }
 
+.arrowBtns {
+  position: fixed;
+  bottom: 8px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.arrowBtn {
+  width: 27px;
+  height: 27px;
+  cursor: pointer;
+}
+.arrowBtn:hover {
+  transform: scale(1.2);
+}
+
 /* Tablet and Smaller Desktop */
 @media (min-width: 701px) and (max-width: 1120px) {
   .grid {

@@ -18,6 +18,7 @@ import Table from "./table";
 import InsertModal from "./insertModal";
 import { dbTypePayload, groupTypePayload } from "./constants";
 import Footer from "./Footer";
+import ScrollButton from "./ScrollButton";
 
 const AVAILABLE_SORT_OPTIONS = ["Time Updated", "Source Name"];
 
@@ -34,7 +35,7 @@ export default function Streaming() {
   const [activeOnly, setActiveOnly] = useState(false);
   const [notVoidOnly, setNotVoidOnly] = useState(true);
   const [rowToDuplicate, setRowToDuplicate] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [availableSources, setAvailableSources] = useState([]);
 
   const [selectedSortingType, setSelectedSortingType] = useState(
@@ -385,6 +386,7 @@ export default function Streaming() {
         rowToDuplicate={rowToDuplicate}
       />
       <Footer data={sorted} loading={loading}/>
+      <ScrollButton />
     </main>
   );
 }

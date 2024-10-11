@@ -59,6 +59,7 @@ function ExpandedRowContent({
         <span className={styles.smallCell}>Facility</span>
         <span className={styles.smallCell}>
           <input
+            onClick={(e) => e.stopPropagation()}
             name="facility"
             type="text"
             className={styles.shortInput}
@@ -72,6 +73,7 @@ function ExpandedRowContent({
         <span className={styles.smallCell}>run freq</span>
         <span className={styles.smallCell}>
           <input
+            onClick={(e) => e.stopPropagation()}
             name="run_frequency_in_secs"
             type="text"
             className={styles.shortInput}
@@ -85,6 +87,7 @@ function ExpandedRowContent({
         <span className={styles.smallCell}>default run</span>
         <span className={styles.smallCell}>
           <input
+            onClick={(e) => e.stopPropagation()}
             name="default_run_frequency_in_secs"
             type="text"
             className={styles.shortInput}
@@ -98,6 +101,7 @@ function ExpandedRowContent({
         <span className={styles.smallCell}>alert</span>
         <span className={styles.smallCell}>
           <input
+            onClick={(e) => e.stopPropagation()}
             name="alert_frequency_in_secs"
             type="text"
             className={styles.shortInput}
@@ -111,6 +115,7 @@ function ExpandedRowContent({
         <span className={styles.smallCell}>batch</span>
         <span className={styles.smallCell}>
           <input
+            onClick={(e) => e.stopPropagation()}
             name="batch_size"
             type="text"
             className={styles.shortInput}
@@ -123,6 +128,7 @@ function ExpandedRowContent({
       <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>Notes</span>
         <textarea
+          onClick={(e) => e.stopPropagation()}
           name="notes"
           value={streamingRow.notes}
           onChange={handleChange}
@@ -150,17 +156,32 @@ function ExpandedRowContent({
           }}
         >
           <button
-            onClick={() => handleDuplicateRow(streamingRow)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDuplicateRow(streamingRow);
+            }}
             style={{ width: "60px" }}
           >
             Duplicate
           </button>
           {isVoid ? (
-            <button onClick={handleUnvoidRow} style={{ width: "60px" }}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleUnvoidRow();
+              }}
+              style={{ width: "60px" }}
+            >
               Unvoid
             </button>
           ) : (
-            <button onClick={handleDeleteRow} style={{ width: "60px" }}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteRow();
+              }}
+              style={{ width: "60px" }}
+            >
               Delete
             </button>
           )}

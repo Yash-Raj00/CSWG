@@ -8,7 +8,6 @@ let isConnectedProd = false;
 
 const ConnectToCassandra = async (env) => {
   let currEnv = env.toLocaleUpperCase();
-
   // set correct config
   if (currEnv === "UAT" && isConnectedUat) {
     console.log("Connection exists for UAT");
@@ -18,53 +17,36 @@ const ConnectToCassandra = async (env) => {
     console.log("Connection exists for PROD");
     return clientProd; // Skip connection for PROD
   }
-
   console.log(`Connecting to Cassandra... ${currEnv}`);
 
-  if (currEnv === "UAT") {
-    try {
-      clientUat = new cassandra.Client({
-        contactPoints: [poolConfig.pointOne, poolConfig.pointTwo],
-        localDataCenter: poolConfig.dc,
-        keyspace: poolConfig.keyspace,
-        credentials: {
-          username: poolConfig.user,
-          password: poolConfig.password,
-        },
-      });
-      await clientUat.connect(); // Ensure the client is connected
+  let clientConfig = currEnv === "UAT" ? poolConfig : poolProdConfig;
+  try {
+    let client = new cassandra.Client({
+      contactPoints: [clientConfig.pointOne, clientConfig.pointTwo],
+      localDataCenter: clientConfig.dc,
+      keyspace: clientConfig.keyspace,
+      credentials: {
+        username: clientConfig.user,
+        password: clientConfig.password,
+      },
+    });
+    await client.connect(); // Ensure the client is connected
+    console.log(
+      "Cassandra connection successful " + client.options.localDataCenter
+    );
+    if (currEnv === "UAT") {
       isConnectedUat = true;
-      console.log(
-        "Cassandra connection successful " + clientUat.options.localDataCenter
-      );
+      clientUat = client;
       return clientUat;
-    } catch (error) {
-      console.error("Cassandra connection error", error);
-      isConnectedUat = false;
-      return false;
-    }
-  } else if (currEnv === "PROD") {
-    try {
-      clientProd = new cassandra.Client({
-        contactPoints: [poolProdConfig.pointOne, poolProdConfig.pointTwo],
-        localDataCenter: poolProdConfig.dc,
-        keyspace: poolProdConfig.keyspace,
-        credentials: {
-          username: poolProdConfig.user,
-          password: poolProdConfig.password,
-        },
-      });
-      await clientProd.connect(); // Ensure the client is connected
+    } else {
       isConnectedProd = true;
-      console.log(
-        "Cassandra connection successful " + clientProd.options.localDataCenter
-      );
+      clientProd = client;
       return clientProd;
-    } catch (error) {
-      console.error("Cassandra connection error", error);
-      isConnectedProd = false;
-      return false;
     }
+  } catch (error) {
+    console.error("Cassandra connection error", error);
+    currEnv === "UAT" ? (isConnectedUat = false) : (isConnectedProd = false);
+    return false;
   }
 };
 
