@@ -1,15 +1,20 @@
 import React from "react";
 import styles from "../../page.module.css";
+import { facilityPayload } from "./constants";
+import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 
 function ExpandedRowContent({
   streamingRow,
   handleDeleteRow,
   handleUnvoidRow,
   handleChange,
-  commitChanges,
   changed,
   handleRemoveLastRun,
   handleDuplicateRow,
+  facilities,
+  showFacilitySelect,
+  setShowFacilitySelect,
+  handleFacilityChange,
 }) {
   const tableRowStyle = {
     display: "inline-flex",
@@ -57,17 +62,98 @@ function ExpandedRowContent({
       </div>
       <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>Facility</span>
-        <span className={styles.smallCell}>
+        <div
+          style={{
+            position: "relative",
+          }}
+        >
           <input
-            onClick={(e) => e.stopPropagation()}
-            name="facility"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowFacilitySelect(!showFacilitySelect);
+            }}
+            className={styles.smallCell}
             type="text"
-            className={styles.shortInput}
-            value={streamingRow.facility}
-            onChange={handleChange}
-            disabled={isVoid}
+            name="facilities"
+            id="facilities"
+            value={facilities
+              ?.map(
+                (faci) =>
+                  facilityPayload.find((item) => item.value === faci)?.label
+              )
+              ?.join(" | ")}
           />
+          <span
+            style={{
+              position: "absolute",
+              right: 2,
+              top: 3,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowFacilitySelect(!showFacilitySelect);
+            }}
+          >
+            {showFacilitySelect ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
+          </span>
+        </div>
+        <span
+          onClick={(e) => e.stopPropagation()}
+          className={styles.smallCell}
+          style={{
+            display: showFacilitySelect ? "flex" : "none",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "2px",
+            backgroundColor: "white",
+            paddingLeft: 2,
+            paddingRight: 1,
+            paddingTop: 1,
+            paddingBottom: 1,
+            border: "1px solid lightgray",
+            borderRadius: 4,
+            zIndex: 10,
+          }}
+        >
+          {facilityPayload.map((item, i) => (
+            <span
+              key={item.value}
+              style={{ display: "flex", alignItems: "center", gap: "2px" }}
+            >
+              <input
+                type="checkbox"
+                name={item.label}
+                id={item.value + streamingRow.last_run_timestamp}
+                onChange={(e) => {
+                  handleFacilityChange(e, item.value);
+                }}
+                checked={facilities.includes(item.value)}
+              />
+              <label htmlFor={item.value + streamingRow.last_run_timestamp}>
+                {item.label}
+              </label>
+            </span>
+          ))}
         </span>
+        {streamingRow.source_system_dbtype === "REST-Webservice" && (
+          <span className={styles.smallCell} style={{ marginTop: 25 }}>
+            <span>Rest url:</span>
+            <div>
+              <input
+                onClick={(e) => e.stopPropagation()}
+                name="restUrl"
+                type="text"
+                className={styles.shortInput}
+                value={streamingRow.restUrl}
+                onChange={handleChange}
+                disabled={isVoid}
+                style={{
+                  width: "100%",
+                }}
+              />
+            </div>
+          </span>
+        )}
       </div>
       <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>run freq</span>

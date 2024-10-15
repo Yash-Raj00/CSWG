@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-responsive-modal";
 import styles from "./insertModal.module.css";
 import { insertAction } from "../actions";
-import { dbTypePayload, groupTypePayload } from "./constants";
+import { dbTypePayload, facilityPayload, groupTypePayload } from "./constants";
 import { useSearchParams } from "next/navigation";
+import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 
 const initialFormData = {
   source_system_name: "",
@@ -11,7 +12,7 @@ const initialFormData = {
   active: "N",
   alert_frequency_in_secs: "30000",
   batch_size: "1",
-  facility: "",
+  facility: [],
   groupid: "",
   run_frequency_in_secs: "300",
   default_run_frequency_in_secs: "300",
@@ -21,14 +22,21 @@ const initialFormData = {
   target_table_name: "",
 };
 
-const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate }) => {
+const InsertModal = ({
+  modalOpen,
+  onCloseModal,
+  streamingData,
+  rowToDuplicate,
+}) => {
   const env = useSearchParams().get("env");
   const [formData, setFormData] = useState(initialFormData);
   const [formError, setFormError] = useState("");
 
+  const [showFacilitySelect, setShowFacilitySelect] = useState(false);
+
   useEffect(() => {
     if (rowToDuplicate && Object.keys(rowToDuplicate).length) {
-      setFormData(rowToDuplicate)
+      setFormData(rowToDuplicate);
     }
   }, [rowToDuplicate]);
 
@@ -84,12 +92,16 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
 
     console.log("Form Data Submitted: ", formData);
 
-    const response = await insertAction({
-      ...formData,
-      target_table_list: [
-        `${formData.target_keyspace}.${formData.target_table_name}`,
-      ],
-    }, env);
+    const response = await insertAction(
+      {
+        ...formData,
+        target_table_list: [
+          `${formData.target_keyspace}.${formData.target_table_name}`,
+        ],
+        facility: formData.facility.join(" | "),
+      },
+      env
+    );
 
     if (response) {
       handleCloseModal();
@@ -100,8 +112,20 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
 
   const handleCloseModal = () => {
     setFormData(initialFormData);
-    setFormError('');
+    setFormError("");
     onCloseModal();
+  };
+
+  const handleFacilityChange = (e, code) => {
+    console.log("facii", formData.facility);
+    if (e.target.checked) {
+      setFormData((prev) => ({ ...prev, facility: [...prev.facility, code] }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        facility: prev.facility.filter((item) => item !== code),
+      }));
+    }
   };
 
   return (
@@ -155,14 +179,92 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
             readOnly
           />
         </div>
-        <div className={styles.field}>
+        <div
+          className={styles.field}
+          style={{
+            position: "relative",
+          }}
+        >
           <label>Facility</label>
           <input
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowFacilitySelect(!showFacilitySelect);
+            }}
             type="text"
-            name="facility"
-            value={formData.facility}
-            onChange={handleChange}
+            name="facilities"
+            id="facilities"
+            value={formData.facility
+              ?.map(
+                (faci) =>
+                  facilityPayload.find((item) => item.value === faci)?.label
+              )
+              ?.join(" | ")}
+            style={{
+              marginTop: 2,
+              marginBottom: 2,
+              width: "100%",
+            }}
           />
+          <span
+            style={{
+              position: "absolute",
+              right: 5,
+              top: 11,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowFacilitySelect(!showFacilitySelect);
+            }}
+          >
+            {showFacilitySelect ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
+          </span>
+          <span
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              display: showFacilitySelect ? "flex" : "none",
+              position: "absolute",
+              top: 40,
+              left: 257,
+              height: 300,
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "2px",
+              backgroundColor: "white",
+              paddingLeft: 4,
+              paddingRight: 1,
+              paddingTop: 1,
+              paddingBottom: 1,
+              border: "1px solid lightgray",
+              borderRadius: 4,
+              overflowY: "auto",
+              zIndex: 10,
+            }}
+          >
+            {facilityPayload.map((item, i) => (
+              <span
+                key={item.value}
+                style={{
+                  width: 250,
+                  padding: "1px 0",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  name={item.label}
+                  id={item.value}
+                  onChange={(e) => {
+                    handleFacilityChange(e, item.value);
+                  }}
+                  style={{
+                    marginRight: 5,
+                  }}
+                  checked={formData.facility.includes(item.value)}
+                />
+                <label htmlFor={item.value}>{item.label}</label>
+              </span>
+            ))}
+          </span>
         </div>
         <div className={styles.field}>
           <label>Group ID</label>
@@ -238,7 +340,7 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
             onChange={handleChange}
           />
         </div>
-        
+
         <div className={styles.submitButtonWrapper}>
           {formError && <div className={styles.error}>{formError}</div>}
           <button type="submit" className={styles.submitButton}>

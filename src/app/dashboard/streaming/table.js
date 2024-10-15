@@ -33,7 +33,7 @@ export default function Table({
       <tbody>
         {data.map((row, index) => (
           <Row
-            row={{ ...row }}
+            row={{ ...row, restUrl: row.restUrl ? row.restUrl : row.facility }}
             index={index}
             updateRow={updateRow}
             deleteRow={deleteRow}

@@ -3,7 +3,12 @@ import { Modal } from "react-responsive-modal";
 
 import styles from "../../page.module.css";
 import "react-responsive-modal/styles.css";
-import { dbTypePayload, groupTypePayload, activePayload } from "./constants";
+import {
+  dbTypePayload,
+  groupTypePayload,
+  activePayload,
+  facilityPayload,
+} from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
 import { useSearchParams } from "next/navigation";
@@ -25,12 +30,26 @@ export default function Row({
   const [showExpanded, setShowExpanded] = useState(false);
   const [isSelectedRow, setSelectedRow] = useState(false);
 
+  const [facilities, setFacilities] = useState(
+    row.facility?.length > 0 && row.facility?.includes('|') ? row.facility?.split(" | ") :
+     []
+  );
+  const [showFacilitySelect, setShowFacilitySelect] = useState(false);
+
+  const handleFacilityChange = (e, code) => {
+    if (e.target.checked) {
+      setFacilities((prev) => [...prev, code]);
+    } else {
+      setFacilities((prev) => prev.filter((item) => item !== code));
+    }
+    setChanged(true);
+  };
+
   const onOpenModal = () => setModalOpen(true);
 
   const onCloseModal = () => setModalOpen(false);
 
   const handleChange = (event) => {
-    // console.log("handleChange", event.target.name);
     setStreamingRow({
       ...streamingRow,
       [event.target.name]: event.target.value,
@@ -50,9 +69,10 @@ export default function Row({
     ) {
       return alert("Invalid Default Run Frequency value.");
     }
-    updateRow(streamingRow);
+    updateRow({ ...streamingRow, facility: facilities.join(" | ") });
     setChanged(false);
   };
+
 
   const handleCopy = async () => {
     try {
@@ -309,6 +329,10 @@ export default function Row({
               changed={changed}
               handleRemoveLastRun={handleRemoveLastRun}
               handleDuplicateRow={handleDuplicateRow}
+              facilities={facilities}
+              showFacilitySelect={showFacilitySelect}
+              setShowFacilitySelect={setShowFacilitySelect}
+              handleFacilityChange={handleFacilityChange}
             />
           </td>
         </tr>
