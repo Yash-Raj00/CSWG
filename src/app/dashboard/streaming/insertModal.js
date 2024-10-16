@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-responsive-modal";
 import styles from "./insertModal.module.css";
 import { insertAction } from "../actions";
 import { dbTypePayload, facilityPayload, groupTypePayload } from "./constants";
 import { useSearchParams } from "next/navigation";
-import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import { MultiSelect } from "react-multi-select-component";
 
 const initialFormData = {
   source_system_name: "",
@@ -13,6 +13,7 @@ const initialFormData = {
   alert_frequency_in_secs: "30000",
   batch_size: "1",
   facility: [],
+  rest_url: "",
   groupid: "",
   run_frequency_in_secs: "300",
   default_run_frequency_in_secs: "300",
@@ -32,7 +33,7 @@ const InsertModal = ({
   const [formData, setFormData] = useState(initialFormData);
   const [formError, setFormError] = useState("");
 
-  const [showFacilitySelect, setShowFacilitySelect] = useState(false);
+  const [tempFacilities, setTempFacilities] = useState([]);
 
   useEffect(() => {
     if (rowToDuplicate && Object.keys(rowToDuplicate).length) {
@@ -98,7 +99,7 @@ const InsertModal = ({
         target_table_list: [
           `${formData.target_keyspace}.${formData.target_table_name}`,
         ],
-        facility: formData.facility.join(" | "),
+        facility: tempFacilities.map((faci) => faci.value).join(" | "),
       },
       env
     );
@@ -114,18 +115,6 @@ const InsertModal = ({
     setFormData(initialFormData);
     setFormError("");
     onCloseModal();
-  };
-
-  const handleFacilityChange = (e, code) => {
-    console.log("facii", formData.facility);
-    if (e.target.checked) {
-      setFormData((prev) => ({ ...prev, facility: [...prev.facility, code] }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        facility: prev.facility.filter((item) => item !== code),
-      }));
-    }
   };
 
   return (
@@ -180,90 +169,24 @@ const InsertModal = ({
           />
         </div>
         <div
-          className={styles.field}
+        // className={styles.field}
           style={{
-            position: "relative",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            fontSize: 14,
           }}
         >
-          <label>Facility</label>
-          <input
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowFacilitySelect(!showFacilitySelect);
-            }}
-            type="text"
-            name="facilities"
-            id="facilities"
-            value={formData.facility
-              ?.map(
-                (faci) =>
-                  facilityPayload.find((item) => item.value === faci)?.label
-              )
-              ?.join(" | ")}
-            style={{
-              marginTop: 2,
-              marginBottom: 2,
-              width: "100%",
-            }}
-          />
-          <span
-            style={{
-              position: "absolute",
-              right: 5,
-              top: 11,
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowFacilitySelect(!showFacilitySelect);
-            }}
-          >
-            {showFacilitySelect ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
-          </span>
-          <span
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              display: showFacilitySelect ? "flex" : "none",
-              position: "absolute",
-              top: 40,
-              left: 257,
-              height: 300,
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: "2px",
-              backgroundColor: "white",
-              paddingLeft: 4,
-              paddingRight: 1,
-              paddingTop: 1,
-              paddingBottom: 1,
-              border: "1px solid lightgray",
-              borderRadius: 4,
-              overflowY: "auto",
-              zIndex: 10,
-            }}
-          >
-            {facilityPayload.map((item, i) => (
-              <span
-                key={item.value}
-                style={{
-                  width: 250,
-                  padding: "1px 0",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name={item.label}
-                  id={item.value}
-                  onChange={(e) => {
-                    handleFacilityChange(e, item.value);
-                  }}
-                  style={{
-                    marginRight: 5,
-                  }}
-                  checked={formData.facility.includes(item.value)}
-                />
-                <label htmlFor={item.value}>{item.label}</label>
-              </span>
-            ))}
+          <label style={{ flex: 1, marginRight: 4, color: "#333" }}>
+            Facility
+          </label>
+          <span style={{ flex: 2, maxWidth: 504 }}>
+            <MultiSelect
+              options={facilityPayload}
+              value={tempFacilities}
+              onChange={setTempFacilities}
+              labelledBy="Facility"
+            />
           </span>
         </div>
         <div className={styles.field}>
@@ -313,6 +236,15 @@ const InsertModal = ({
               </option>
             ))}
           </select>
+        </div>
+        <div className={styles.field}>
+          <label>Rest URL</label>
+          <input
+            type="text"
+            name="rest_url"
+            value={formData.rest_url}
+            disabled={formData.source_system_dbtype !== "REST-Webservice"}
+          />
         </div>
         <div className={styles.field}>
           <label>Source Table Query</label>

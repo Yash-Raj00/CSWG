@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../../page.module.css";
 import { facilityPayload } from "./constants";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import useDropdown from "@/utils/useDropdown";
 
 function ExpandedRowContent({
   streamingRow,
@@ -12,8 +13,6 @@ function ExpandedRowContent({
   handleRemoveLastRun,
   handleDuplicateRow,
   facilities,
-  showFacilitySelect,
-  setShowFacilitySelect,
   handleFacilityChange,
 }) {
   const tableRowStyle = {
@@ -24,6 +23,8 @@ function ExpandedRowContent({
   };
 
   const isVoid = streamingRow.voided_by;
+
+  const {ref, isOpen, setIsOpen} = useDropdown();
 
   return (
     <div
@@ -60,7 +61,7 @@ function ExpandedRowContent({
             : ""}
         </span>
       </div>
-      <div className={styles.streamingTdMid} style={tableRowStyle}>
+      <div className={styles.streamingTdMid} style={{tableRowStyle, position: "relative"}}>
         <span className={styles.smallCell}>Facility</span>
         <div
           style={{
@@ -70,7 +71,7 @@ function ExpandedRowContent({
           <input
             onClick={(e) => {
               e.stopPropagation();
-              setShowFacilitySelect(!showFacilitySelect);
+              setIsOpen(true);
             }}
             className={styles.smallCell}
             type="text"
@@ -91,17 +92,22 @@ function ExpandedRowContent({
             }}
             onClick={(e) => {
               e.stopPropagation();
-              setShowFacilitySelect(!showFacilitySelect);
+              setIsOpen(!isOpen);
             }}
           >
-            {showFacilitySelect ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
+            {isOpen ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
           </span>
         </div>
         <span
+          ref={ref}
           onClick={(e) => e.stopPropagation()}
           className={styles.smallCell}
           style={{
-            display: showFacilitySelect ? "flex" : "none",
+            position: "absolute",
+            right: 1,
+            top: 40,
+            width: 164,
+            display: isOpen ? "flex" : "none",
             flexDirection: "column",
             alignItems: "flex-start",
             gap: "2px",
@@ -136,15 +142,15 @@ function ExpandedRowContent({
           ))}
         </span>
         {streamingRow.source_system_dbtype === "REST-Webservice" && (
-          <span className={styles.smallCell} style={{ marginTop: 25 }}>
+          <span className={styles.smallCell} style={{ position: "relative", top: 23 }}>
             <span>Rest url:</span>
             <div>
               <input
                 onClick={(e) => e.stopPropagation()}
-                name="restUrl"
+                name="rest_url"
                 type="text"
                 className={styles.shortInput}
-                value={streamingRow.restUrl}
+                value={streamingRow.rest_url}
                 onChange={handleChange}
                 disabled={isVoid}
                 style={{

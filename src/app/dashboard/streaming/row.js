@@ -7,7 +7,6 @@ import {
   dbTypePayload,
   groupTypePayload,
   activePayload,
-  facilityPayload,
 } from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
@@ -29,12 +28,12 @@ export default function Row({
   const [streamingRow, setStreamingRow] = useState(row);
   const [showExpanded, setShowExpanded] = useState(false);
   const [isSelectedRow, setSelectedRow] = useState(false);
+  const [showFacilitySelect, setShowFacilitySelect] = useState(false);
 
   const [facilities, setFacilities] = useState(
     row.facility?.length > 0 && row.facility?.includes('|') ? row.facility?.split(" | ") :
      []
   );
-  const [showFacilitySelect, setShowFacilitySelect] = useState(false);
 
   const handleFacilityChange = (e, code) => {
     if (e.target.checked) {
@@ -69,6 +68,7 @@ export default function Row({
     ) {
       return alert("Invalid Default Run Frequency value.");
     }
+    // console.log("streamingRow", streamingRow);
     updateRow({ ...streamingRow, facility: facilities.join(" | ") });
     setChanged(false);
   };
