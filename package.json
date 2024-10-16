@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "add": "git add . && git restore --staged src/app/globals.css package.json"
   },
   "dependencies": {
     "@tanstack/react-table": "^8.19.3",
@@ -20,6 +21,7 @@
     "react": "^18.3.1",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
+    "react-multi-select-component": "^4.3.4",
     "react-responsive-modal": "^6.4.2",
     "react-toastify": "^10.0.5"
   },
