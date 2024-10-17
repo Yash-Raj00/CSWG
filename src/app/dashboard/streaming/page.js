@@ -89,7 +89,6 @@ export default function Streaming() {
   };
 
   const updateRow = async (row) => {
-    console.log("updateRow", row);
     const result = await updateAction(row, env);
 
     if (!result) {

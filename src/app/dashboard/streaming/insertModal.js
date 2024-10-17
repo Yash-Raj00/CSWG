@@ -169,7 +169,6 @@ const InsertModal = ({
           />
         </div>
         <div
-          // className={styles.field}
           style={{
             display: "flex",
             justifyContent: "space-between",
