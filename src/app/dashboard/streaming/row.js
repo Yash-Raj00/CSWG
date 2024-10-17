@@ -197,7 +197,7 @@ export default function Row({
             value={streamingRow.source_system_dbtype}
             name="source_system_dbtype"
             onChange={handleChange}
-            disabled={isVoid}
+            disabled={true}
           >
             {dbTypePayload.map((item) => (
               <option key={item.value} value={item.value}>
