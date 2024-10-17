@@ -30,11 +30,11 @@ export default function Row({
   const [showExpanded, setShowExpanded] = useState(false);
   const [isSelectedRow, setSelectedRow] = useState(false);
 
-  const [facilities, setFacilities] = useState(
-    row.facility?.length > 0 && row.facility?.includes("|")
-      ? row.facility?.split(" | ")
-      : []
-  );
+  var facilities = []
+
+  if (row.facility?.length && !row.facility?.includes("http")) {
+    facilities = row.facility?.split(", ")
+  }
 
   const [tempFacilities, setTempFacilities] = useState(
     facilities.map((facilityCode) =>
@@ -73,7 +73,7 @@ export default function Row({
     }
     updateRow({
       ...streamingRow,
-      facility: tempFacilities.map((faci) => faci.value).join(" | "),
+      facility: tempFacilities.map((faci) => faci.value).join(", "),
     });
     setChanged(false);
   };

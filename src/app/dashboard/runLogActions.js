@@ -11,7 +11,7 @@ const selectAction = async (env) => {
   ALLOW FILTERING`;
   const data = await SelectQuery(selectShippingJobRowsQueryToday, env);
   const orderedData = data.sort(
-    (a, b) => new Date(b.created_date) - new Date(a.created_date)
+    (a, b) => b.created_date.localeCompare(a.created_date)
   );
 
   return orderedData;

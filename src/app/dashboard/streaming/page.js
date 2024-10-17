@@ -238,7 +238,7 @@ export default function Streaming() {
     const matchesFacilities =
       selectedFacilities.length > 0
         ? selectedFacilities.some((facility) =>
-            item.facility?.split(' | ').includes(facility.value)
+            item.facility?.split(', ').includes(facility.value)
           )
         : true;
 

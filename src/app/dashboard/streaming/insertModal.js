@@ -99,7 +99,7 @@ const InsertModal = ({
         target_table_list: [
           `${formData.target_keyspace}.${formData.target_table_name}`,
         ],
-        facility: tempFacilities.map((faci) => faci.value).join(" | "),
+        facility: tempFacilities.map((faci) => faci.value).join(", "),
       },
       env
     );

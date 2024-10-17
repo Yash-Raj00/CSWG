@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "add": "git add . && git restore --staged src/app/globals.css package.json"
+    "lint": "next lint"
   },
   "dependencies": {
     "@tanstack/react-table": "^8.19.3",
