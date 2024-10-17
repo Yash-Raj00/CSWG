@@ -1,15 +1,17 @@
 import React from "react";
 import styles from "../../page.module.css";
+import { facilityPayload } from "./constants";
+import { MultiSelect } from "react-multi-select-component";
 
 function ExpandedRowContent({
   streamingRow,
   handleDeleteRow,
   handleUnvoidRow,
   handleChange,
-  commitChanges,
-  changed,
   handleRemoveLastRun,
   handleDuplicateRow,
+  tempFacilities,
+  handleTempFacilityChange,
 }) {
   const tableRowStyle = {
     display: "inline-flex",
@@ -55,19 +57,50 @@ function ExpandedRowContent({
             : ""}
         </span>
       </div>
-      <div className={styles.streamingTdMid} style={tableRowStyle}>
+      <div
+        className={styles.streamingTdMid}
+        style={{
+          tableRowStyle,
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          marginTop: 2,
+        }}
+      >
         <span className={styles.smallCell}>Facility</span>
-        <span className={styles.smallCell}>
-          <input
-            onClick={(e) => e.stopPropagation()}
-            name="facility"
-            type="text"
-            className={styles.shortInput}
-            value={streamingRow.facility}
-            onChange={handleChange}
-            disabled={isVoid}
+        <span
+          onClick={(e) => e.stopPropagation()}
+          style={{ marginTop: 1, width: 185, fontSize: 11 }}
+        >
+          <MultiSelect
+            options={facilityPayload}
+            value={tempFacilities}
+            onChange={(faci) => handleTempFacilityChange(faci)}
+            labelledBy="Facility"
           />
         </span>
+        {streamingRow.source_system_dbtype === "REST-Webservice" && (
+          <span
+            className={styles.smallCell}
+            style={{ position: "relative", top: 23 }}
+          >
+            <span>Rest url:</span>
+            <div>
+              <input
+                onClick={(e) => e.stopPropagation()}
+                name="rest_url"
+                type="text"
+                className={styles.shortInput}
+                value={streamingRow.rest_url}
+                onChange={handleChange}
+                disabled={isVoid}
+                style={{
+                  width: "100%",
+                }}
+              />
+            </div>
+          </span>
+        )}
       </div>
       <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>run freq</span>

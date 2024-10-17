@@ -13,12 +13,12 @@ const selectRowsQuery =
 
 const updateRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
   SET groupid = ?, active = ?, run_frequency_in_secs = ?, default_run_frequency_in_secs = ?, source_table_query = ? , 
-  facility = ?, alert_frequency_in_secs = ?, batch_size = ?, notes = ?, updated_date = ?, target_keyspace = ?, target_table_name = ?, target_table_list = ?
+  facility = ?, rest_url = ?, alert_frequency_in_secs = ?, batch_size = ?, notes = ?, updated_date = ?, target_keyspace = ?, target_table_name = ?, target_table_list = ?
   WHERE source_system_name = ? and source_table_name = ?`;
 
 const insertRowQuery = `INSERT INTO wip_configurations.spark_streaming_table_config 
-  (source_system_name, source_table_name, active, alert_frequency_in_secs, batch_size, facility, groupid, run_frequency_in_secs, default_run_frequency_in_secs, source_system_dbtype, source_table_query, target_keyspace, target_table_list, target_table_name) 
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  (source_system_name, source_table_name, active, alert_frequency_in_secs, batch_size, facility, rest_url, groupid, run_frequency_in_secs, default_run_frequency_in_secs, source_system_dbtype, source_table_query, target_keyspace, target_table_list, target_table_name) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 const updateLastRunTimestamp = `UPDATE wip_configurations.spark_streaming_table_config
    SET last_run_timestamp = '' WHERE source_system_name = ? and source_table_name = ? `;
@@ -51,6 +51,7 @@ const updateAction = async (row, env) => {
     source_table_name,
     source_table_query,
     facility,
+    rest_url,
     alert_frequency_in_secs,
     batch_size,
     notes,
@@ -69,6 +70,7 @@ const updateAction = async (row, env) => {
     default_run_frequency_in_secs,
     source_table_query,
     facility,
+    rest_url,
     alert_frequency_in_secs,
     batch_size,
     notes,
@@ -91,6 +93,7 @@ const insertAction = async (row, env) => {
     alert_frequency_in_secs,
     batch_size,
     facility,
+    rest_url,
     groupid,
     run_frequency_in_secs,
     default_run_frequency_in_secs,
@@ -108,6 +111,7 @@ const insertAction = async (row, env) => {
     alert_frequency_in_secs,
     batch_size,
     facility,
+    rest_url,
     groupid,
     run_frequency_in_secs,
     default_run_frequency_in_secs,

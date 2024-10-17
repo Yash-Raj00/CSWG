@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-responsive-modal";
 import styles from "./insertModal.module.css";
 import { insertAction } from "../actions";
-import { dbTypePayload, groupTypePayload } from "./constants";
+import { dbTypePayload, facilityPayload, groupTypePayload } from "./constants";
 import { useSearchParams } from "next/navigation";
+import { MultiSelect } from "react-multi-select-component";
 
 const initialFormData = {
   source_system_name: "",
@@ -11,7 +12,8 @@ const initialFormData = {
   active: "N",
   alert_frequency_in_secs: "30000",
   batch_size: "1",
-  facility: "",
+  facility: [],
+  rest_url: "",
   groupid: "",
   run_frequency_in_secs: "300",
   default_run_frequency_in_secs: "300",
@@ -21,14 +23,21 @@ const initialFormData = {
   target_table_name: "",
 };
 
-const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate }) => {
+const InsertModal = ({
+  modalOpen,
+  onCloseModal,
+  streamingData,
+  rowToDuplicate,
+}) => {
   const env = useSearchParams().get("env");
   const [formData, setFormData] = useState(initialFormData);
   const [formError, setFormError] = useState("");
 
+  const [tempFacilities, setTempFacilities] = useState([]);
+
   useEffect(() => {
     if (rowToDuplicate && Object.keys(rowToDuplicate).length) {
-      setFormData(rowToDuplicate)
+      setFormData(rowToDuplicate);
     }
   }, [rowToDuplicate]);
 
@@ -50,7 +59,7 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
     e.preventDefault();
 
     const hasEmptyFields = Object.entries(formData).some(
-      ([key, value]) => key !== "facility" && value === ""
+      ([key, value]) => (formData.source_system_dbtype === "REST-Webservice" && !formData.rest_url) || (key !== "facility" && key !== "rest_url" && value === "")
     );
 
     if (hasEmptyFields) {
@@ -84,12 +93,16 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
 
     console.log("Form Data Submitted: ", formData);
 
-    const response = await insertAction({
-      ...formData,
-      target_table_list: [
-        `${formData.target_keyspace}.${formData.target_table_name}`,
-      ],
-    }, env);
+    const response = await insertAction(
+      {
+        ...formData,
+        target_table_list: [
+          `${formData.target_keyspace}.${formData.target_table_name}`,
+        ],
+        facility: tempFacilities.map((faci) => faci.value).join(", "),
+      },
+      env
+    );
 
     if (response) {
       handleCloseModal();
@@ -100,7 +113,7 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
 
   const handleCloseModal = () => {
     setFormData(initialFormData);
-    setFormError('');
+    setFormError("");
     onCloseModal();
   };
 
@@ -155,14 +168,25 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
             readOnly
           />
         </div>
-        <div className={styles.field}>
-          <label>Facility</label>
-          <input
-            type="text"
-            name="facility"
-            value={formData.facility}
-            onChange={handleChange}
-          />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            fontSize: 14,
+          }}
+        >
+          <label style={{ flex: 1, marginRight: 4, color: "#333" }}>
+            Facility
+          </label>
+          <span style={{ flex: 2, maxWidth: 504 }}>
+            <MultiSelect
+              options={facilityPayload}
+              value={tempFacilities}
+              onChange={setTempFacilities}
+              labelledBy="Facility"
+            />
+          </span>
         </div>
         <div className={styles.field}>
           <label>Group ID</label>
@@ -213,6 +237,16 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
           </select>
         </div>
         <div className={styles.field}>
+          <label>Rest URL</label>
+          <input
+            type="text"
+            name="rest_url"
+            value={formData.rest_url}
+            onChange={handleChange}
+            disabled={formData.source_system_dbtype !== "REST-Webservice"}
+          />
+        </div>
+        <div className={styles.field}>
           <label>Source Table Query</label>
           <textarea
             name="source_table_query"
@@ -238,7 +272,7 @@ const InsertModal = ({ modalOpen, onCloseModal, streamingData, rowToDuplicate })
             onChange={handleChange}
           />
         </div>
-        
+
         <div className={styles.submitButtonWrapper}>
           {formError && <div className={styles.error}>{formError}</div>}
           <button type="submit" className={styles.submitButton}>

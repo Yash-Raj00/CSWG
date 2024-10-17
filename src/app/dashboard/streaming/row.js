@@ -3,7 +3,12 @@ import { Modal } from "react-responsive-modal";
 
 import styles from "../../page.module.css";
 import "react-responsive-modal/styles.css";
-import { dbTypePayload, groupTypePayload, activePayload } from "./constants";
+import {
+  dbTypePayload,
+  groupTypePayload,
+  activePayload,
+  facilityPayload,
+} from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
 import { useSearchParams } from "next/navigation";
@@ -25,12 +30,28 @@ export default function Row({
   const [showExpanded, setShowExpanded] = useState(false);
   const [isSelectedRow, setSelectedRow] = useState(false);
 
+  var facilities = []
+
+  if (row.facility?.length && !row.facility?.includes("http")) {
+    facilities = row.facility?.split(", ")
+  }
+
+  const [tempFacilities, setTempFacilities] = useState(
+    facilities.map((facilityCode) =>
+      facilityPayload.find((item) => item.value === facilityCode)
+    )
+  );
+
+  const handleTempFacilityChange = (faci) => {
+    setTempFacilities(faci);
+    setChanged(true);
+  };
+
   const onOpenModal = () => setModalOpen(true);
 
   const onCloseModal = () => setModalOpen(false);
 
   const handleChange = (event) => {
-    // console.log("handleChange", event.target.name);
     setStreamingRow({
       ...streamingRow,
       [event.target.name]: event.target.value,
@@ -50,7 +71,10 @@ export default function Row({
     ) {
       return alert("Invalid Default Run Frequency value.");
     }
-    updateRow(streamingRow);
+    updateRow({
+      ...streamingRow,
+      facility: tempFacilities.map((faci) => faci.value).join(", "),
+    });
     setChanged(false);
   };
 
@@ -305,10 +329,10 @@ export default function Row({
               handleDeleteRow={handleDeleteRow}
               handleUnvoidRow={handleUnvoidRow}
               handleChange={handleChange}
-              commitChanges={commitChanges}
-              changed={changed}
               handleRemoveLastRun={handleRemoveLastRun}
               handleDuplicateRow={handleDuplicateRow}
+              tempFacilities={tempFacilities}
+              handleTempFacilityChange={handleTempFacilityChange}
             />
           </td>
         </tr>

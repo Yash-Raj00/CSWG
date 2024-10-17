@@ -80,8 +80,8 @@
 }
 
 select {
-  background-color: #2D2D2D;
-  color: white;             /* Explicit text color */
+  background-color: #2d2d2d;
+  color: white; /* Explicit text color */
 }
 
 html,
@@ -90,14 +90,9 @@ body {
   overflow-x: hidden;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+
+.rmsc .dropdown-heading {
+  height: auto !important;
 }
 
 a {
@@ -105,8 +100,20 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
+/* UNCOMMENT THESE TO ENABLE DARK MODE */
+
+/* body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+} */
+
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
-}
+} */

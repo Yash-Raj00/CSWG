@@ -16,9 +16,10 @@ import {
 import styles from "../../page.module.css";
 import Table from "./table";
 import InsertModal from "./insertModal";
-import { dbTypePayload, groupTypePayload } from "./constants";
+import { dbTypePayload, facilityPayload, groupTypePayload } from "./constants";
 import Footer from "./Footer";
 import ScrollButton from "./ScrollButton";
+import { MultiSelect } from "react-multi-select-component";
 
 const AVAILABLE_SORT_OPTIONS = ["Time Updated", "Source Name"];
 
@@ -44,6 +45,7 @@ export default function Streaming() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedSource, setSelectedSource] = useState("");
+  const [selectedFacilities, setSelectedFacilities] = useState([]);
 
   const onOpenModal = () => setModalOpen(true);
 
@@ -66,7 +68,6 @@ export default function Streaming() {
     const data = await selectAction(env);
 
     console.log("fetchData", JSON.stringify(data));
-
     setList(data);
     setLoading(false);
 
@@ -233,13 +234,20 @@ export default function Streaming() {
       ? item.source_system_name === selectedSource
       : true;
     const matchesGroup = selectedGroup ? item.groupid === selectedGroup : true;
+    const matchesFacilities =
+      selectedFacilities.length > 0
+        ? selectedFacilities.some((facility) =>
+            item.facility?.split(', ').includes(facility.value)
+          )
+        : true;
 
     return (
       matchesActive &&
       matchesVoid &&
       matchesSource &&
       matchesType &&
-      matchesGroup
+      matchesGroup &&
+      matchesFacilities
     );
   });
 
@@ -249,7 +257,6 @@ export default function Streaming() {
           (r) => r.source_system_name + +r.source_table_name
         )
       : sort(filteredList).desc((r) => r.updated_date);
-
 
   return (
     <main
@@ -328,6 +335,24 @@ export default function Streaming() {
             </select>
           </label>
         </div>
+        <div
+          style={{
+            marginRight: 20,
+            display: "flex",
+            gap: 2,
+            alignItems: "center",
+          }}
+        >
+          Facility:
+          <span style={{ fontSize: 10, width: 165 }}>
+            <MultiSelect
+              options={facilityPayload}
+              value={selectedFacilities}
+              onChange={setSelectedFacilities}
+              labelledBy="Facility"
+            />
+          </span>
+        </div>
         <div style={{ marginRight: 20 }}>
           <label>
             Type:
@@ -385,7 +410,7 @@ export default function Streaming() {
         streamingData={list}
         rowToDuplicate={rowToDuplicate}
       />
-      <Footer data={sorted} loading={loading}/>
+      <Footer data={sorted} loading={loading} />
       <ScrollButton />
     </main>
   );

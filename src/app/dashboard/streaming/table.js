@@ -33,7 +33,7 @@ export default function Table({
       <tbody>
         {data.map((row, index) => (
           <Row
-            row={{ ...row }}
+            row={{ ...row}}
             index={index}
             updateRow={updateRow}
             deleteRow={deleteRow}
