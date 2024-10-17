@@ -13,7 +13,7 @@ const selectRowsQuery =
 
 const updateRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
   SET groupid = ?, active = ?, run_frequency_in_secs = ?, default_run_frequency_in_secs = ?, source_table_query = ? , 
-  facility = ?, rest_url = ?, alert_frequency_in_secs = ?, batch_size = ?, notes = ?, updated_date = ?, target_keyspace = ?, target_table_name = ?, target_table_list = ?
+  facility = ?, rest_url = ?, alert_frequency_in_secs = ?, batch_size = ?, notes = ?, updated_date = ?, target_keyspace = ?, target_table_name = ?, target_table_list = ?, source_system_dbtype = ?
   WHERE source_system_name = ? and source_table_name = ?`;
 
 const insertRowQuery = `INSERT INTO wip_configurations.spark_streaming_table_config 
@@ -57,6 +57,7 @@ const updateAction = async (row, env) => {
     notes,
     target_keyspace,
     target_table_name,
+    source_system_dbtype,
   } = row;
 
   const update_time = Date.now() / 1000;
@@ -78,6 +79,7 @@ const updateAction = async (row, env) => {
     target_keyspace,
     target_table_name,
     target_table_list,
+    source_system_dbtype,
     source_system_name,
     source_table_name,
   ];
@@ -149,7 +151,13 @@ const deleteAction = async (row, env) => {
 };
 
 const unvoidAction = async (row, env) => {
-  const { source_system_name, source_table_name, updated_date, voided_by, active } = row;
+  const {
+    source_system_name,
+    source_table_name,
+    updated_date,
+    voided_by,
+    active,
+  } = row;
 
   const params = [
     voided_by,
