@@ -1,19 +1,17 @@
 import React from "react";
 import styles from "../../page.module.css";
 import { facilityPayload } from "./constants";
-import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
-import useDropdown from "@/utils/useDropdown";
+import { MultiSelect } from "react-multi-select-component";
 
 function ExpandedRowContent({
   streamingRow,
   handleDeleteRow,
   handleUnvoidRow,
   handleChange,
-  changed,
   handleRemoveLastRun,
   handleDuplicateRow,
-  facilities,
-  handleFacilityChange,
+  tempFacilities,
+  handleTempFacilityChange,
 }) {
   const tableRowStyle = {
     display: "inline-flex",
@@ -23,8 +21,6 @@ function ExpandedRowContent({
   };
 
   const isVoid = streamingRow.voided_by;
-
-  const {ref, isOpen, setIsOpen} = useDropdown();
 
   return (
     <div
@@ -61,88 +57,33 @@ function ExpandedRowContent({
             : ""}
         </span>
       </div>
-      <div className={styles.streamingTdMid} style={{tableRowStyle, position: "relative"}}>
+      <div
+        className={styles.streamingTdMid}
+        style={{
+          tableRowStyle,
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          marginTop: 2,
+        }}
+      >
         <span className={styles.smallCell}>Facility</span>
-        <div
-          style={{
-            position: "relative",
-          }}
-        >
-          <input
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(true);
-            }}
-            className={styles.smallCell}
-            type="text"
-            name="facilities"
-            id="facilities"
-            value={facilities
-              ?.map(
-                (faci) =>
-                  facilityPayload.find((item) => item.value === faci)?.label
-              )
-              ?.join(" | ")}
-          />
-          <span
-            style={{
-              position: "absolute",
-              right: 2,
-              top: 3,
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(!isOpen);
-            }}
-          >
-            {isOpen ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
-          </span>
-        </div>
         <span
-          ref={ref}
           onClick={(e) => e.stopPropagation()}
-          className={styles.smallCell}
-          style={{
-            position: "absolute",
-            right: 1,
-            top: 40,
-            width: 164,
-            display: isOpen ? "flex" : "none",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "2px",
-            backgroundColor: "white",
-            paddingLeft: 2,
-            paddingRight: 1,
-            paddingTop: 1,
-            paddingBottom: 1,
-            border: "1px solid lightgray",
-            borderRadius: 4,
-            zIndex: 10,
-          }}
+          style={{ marginTop: 1, width: 185, fontSize: 11 }}
         >
-          {facilityPayload.map((item, i) => (
-            <span
-              key={item.value}
-              style={{ display: "flex", alignItems: "center", gap: "2px" }}
-            >
-              <input
-                type="checkbox"
-                name={item.label}
-                id={item.value + streamingRow.last_run_timestamp}
-                onChange={(e) => {
-                  handleFacilityChange(e, item.value);
-                }}
-                checked={facilities.includes(item.value)}
-              />
-              <label htmlFor={item.value + streamingRow.last_run_timestamp}>
-                {item.label}
-              </label>
-            </span>
-          ))}
+          <MultiSelect
+            options={facilityPayload}
+            value={tempFacilities}
+            onChange={(faci) => handleTempFacilityChange(faci)}
+            labelledBy="Facility"
+          />
         </span>
         {streamingRow.source_system_dbtype === "REST-Webservice" && (
-          <span className={styles.smallCell} style={{ position: "relative", top: 23 }}>
+          <span
+            className={styles.smallCell}
+            style={{ position: "relative", top: 23 }}
+          >
             <span>Rest url:</span>
             <div>
               <input

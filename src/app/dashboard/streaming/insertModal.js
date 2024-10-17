@@ -59,7 +59,7 @@ const InsertModal = ({
     e.preventDefault();
 
     const hasEmptyFields = Object.entries(formData).some(
-      ([key, value]) => key !== "facility" && value === ""
+      ([key, value]) => (formData.source_system_dbtype === "REST-Webservice" && !formData.rest_url) || (key !== "facility" && key !== "rest_url" && value === "")
     );
 
     if (hasEmptyFields) {
@@ -169,7 +169,7 @@ const InsertModal = ({
           />
         </div>
         <div
-        // className={styles.field}
+          // className={styles.field}
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -243,6 +243,7 @@ const InsertModal = ({
             type="text"
             name="rest_url"
             value={formData.rest_url}
+            onChange={handleChange}
             disabled={formData.source_system_dbtype !== "REST-Webservice"}
           />
         </div>

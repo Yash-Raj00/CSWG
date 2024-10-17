@@ -7,6 +7,7 @@ import {
   dbTypePayload,
   groupTypePayload,
   activePayload,
+  facilityPayload,
 } from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
@@ -28,19 +29,21 @@ export default function Row({
   const [streamingRow, setStreamingRow] = useState(row);
   const [showExpanded, setShowExpanded] = useState(false);
   const [isSelectedRow, setSelectedRow] = useState(false);
-  const [showFacilitySelect, setShowFacilitySelect] = useState(false);
 
   const [facilities, setFacilities] = useState(
-    row.facility?.length > 0 && row.facility?.includes('|') ? row.facility?.split(" | ") :
-     []
+    row.facility?.length > 0 && row.facility?.includes("|")
+      ? row.facility?.split(" | ")
+      : []
   );
 
-  const handleFacilityChange = (e, code) => {
-    if (e.target.checked) {
-      setFacilities((prev) => [...prev, code]);
-    } else {
-      setFacilities((prev) => prev.filter((item) => item !== code));
-    }
+  const [tempFacilities, setTempFacilities] = useState(
+    facilities.map((facilityCode) =>
+      facilityPayload.find((item) => item.value === facilityCode)
+    )
+  );
+
+  const handleTempFacilityChange = (faci) => {
+    setTempFacilities(faci);
     setChanged(true);
   };
 
@@ -68,11 +71,12 @@ export default function Row({
     ) {
       return alert("Invalid Default Run Frequency value.");
     }
-    // console.log("streamingRow", streamingRow);
-    updateRow({ ...streamingRow, facility: facilities.join(" | ") });
+    updateRow({
+      ...streamingRow,
+      facility: tempFacilities.map((faci) => faci.value).join(" | "),
+    });
     setChanged(false);
   };
-
 
   const handleCopy = async () => {
     try {
@@ -325,14 +329,10 @@ export default function Row({
               handleDeleteRow={handleDeleteRow}
               handleUnvoidRow={handleUnvoidRow}
               handleChange={handleChange}
-              commitChanges={commitChanges}
-              changed={changed}
               handleRemoveLastRun={handleRemoveLastRun}
               handleDuplicateRow={handleDuplicateRow}
-              facilities={facilities}
-              showFacilitySelect={showFacilitySelect}
-              setShowFacilitySelect={setShowFacilitySelect}
-              handleFacilityChange={handleFacilityChange}
+              tempFacilities={tempFacilities}
+              handleTempFacilityChange={handleTempFacilityChange}
             />
           </td>
         </tr>

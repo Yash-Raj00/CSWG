@@ -46,7 +46,6 @@ export default function Streaming() {
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedSource, setSelectedSource] = useState("");
   const [selectedFacilities, setSelectedFacilities] = useState([]);
-  const [tempFacilities, setTempFacilities] = useState([]);
 
   const onOpenModal = () => setModalOpen(true);
 
@@ -90,6 +89,7 @@ export default function Streaming() {
   };
 
   const updateRow = async (row) => {
+    console.log("updateRow", row);
     const result = await updateAction(row, env);
 
     if (!result) {
@@ -205,10 +205,6 @@ export default function Streaming() {
     setSelectedSource(e.target.value);
   };
 
-  useEffect(() => {
-    setSelectedFacilities(tempFacilities.map((item) => item.value));
-  }, [tempFacilities]);
-
   const createRunFreqReset = async (definedGroup) => {
     const results = [];
 
@@ -242,7 +238,7 @@ export default function Streaming() {
     const matchesFacilities =
       selectedFacilities.length > 0
         ? selectedFacilities.some((facility) =>
-            item.facility?.includes(facility)
+            item.facility?.split(' | ').includes(facility.value)
           )
         : true;
 
@@ -352,8 +348,8 @@ export default function Streaming() {
           <span style={{ fontSize: 10, width: 165 }}>
             <MultiSelect
               options={facilityPayload}
-              value={tempFacilities}
-              onChange={setTempFacilities}
+              value={selectedFacilities}
+              onChange={setSelectedFacilities}
               labelledBy="Facility"
             />
           </span>
