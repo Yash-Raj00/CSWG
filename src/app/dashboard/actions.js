@@ -1,12 +1,11 @@
 "use server";
 
 import {
-  UpdateQuery,
+  DeleteQuery,
   InsertQuery,
   SelectQuery,
   UpdateQuery,
 } from "@/lib/common/db/pool";
-import { revalidatePath } from "next/cache";
 
 const selectRowsQuery =
   "select * from wip_configurations.spark_streaming_table_config ALLOW FILTERING";
