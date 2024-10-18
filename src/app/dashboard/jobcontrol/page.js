@@ -7,6 +7,7 @@ import LiftTable from "./LiftJobTable";
 import ReceivingJobTable from "./ReceivingJobTable";
 import ShippingTable from "./ShippingJobTable";
 import WarehouseTable from "./warehouseTable";
+import LookupProfilesTable from "./LookupProfilesJobTable";
 
 export default function Jobs() {
   const searchParams = useSearchParams();
@@ -21,10 +22,27 @@ export default function Jobs() {
 
   return (
     <main className={styles.streaming}>
+      {env !== "uat" && (
+        <div
+          style={{
+            width: "100%",
+            backgroundColor: "red",
+            color: "black",
+            textAlign: "center",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            zIndex: 1000,
+          }}
+        >
+          PRODUCTION ENVIRONMENT
+        </div>
+      )}
       <WarehouseTable env={currentEnv} />
       <LiftTable env={currentEnv} />
       <ShippingTable env={currentEnv} />
       <ReceivingJobTable env={currentEnv} />
+      <LookupProfilesTable env={currentEnv} />
       <ToastContainer env={currentEnv} />
     </main>
   );

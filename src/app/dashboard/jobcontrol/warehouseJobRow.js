@@ -69,7 +69,15 @@ export default function Row({ row, updateRow }) {
         </span>
       </td>
       <td className={styles.td}>
-        <button onClick={commitChanges} disabled={!changed}>
+        <button
+          onClick={commitChanges}
+          disabled={!changed}
+          style={{
+            padding: 1,
+            marginRight: 2,
+            backgroundColor: changed ? "#98FB98" : "",
+          }}
+        >
           Save
         </button>
       </td>
