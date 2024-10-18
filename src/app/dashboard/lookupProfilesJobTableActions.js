@@ -40,7 +40,7 @@ const updateAction = async (row, env) => {
 
   console.log("parara", params);
 
-  // return await UpdateQuery(updateRowQuery, params, env);
+  return await UpdateQuery(updateRowQuery, params, env);
 };
 
 export { selectAction, updateAction };
