@@ -30,10 +30,10 @@ export default function Row({
   const [showExpanded, setShowExpanded] = useState(false);
   const [isSelectedRow, setSelectedRow] = useState(false);
 
-  var facilities = []
+  var facilities = [];
 
   if (row.facility?.length && !row.facility?.includes("http")) {
-    facilities = row.facility?.split(", ")
+    facilities = row.facility?.split(", ");
   }
 
   const [tempFacilities, setTempFacilities] = useState(
@@ -151,6 +151,10 @@ export default function Row({
 
   let activeRowColor = getRowColor();
   let activeRowBorderColor = getBorderColor();
+  let rowBorderStyle =
+    streamingRow.active === "N" && activeRowBorderColor === "grey"
+      ? "dashed"
+      : "solid";
 
   return (
     <>
@@ -161,6 +165,7 @@ export default function Row({
         style={{
           backgroundColor: activeRowColor,
           borderColor: activeRowBorderColor,
+          borderStyle: rowBorderStyle,
         }}
       >
         <td
@@ -313,6 +318,8 @@ export default function Row({
           style={{
             backgroundColor: activeRowColor,
             borderColor: activeRowBorderColor,
+            borderLeftStyle: rowBorderStyle,
+            borderRightStyle: rowBorderStyle,
           }}
         >
           <td
@@ -342,6 +349,9 @@ export default function Row({
           backgroundColor: activeRowColor,
           border: "2.5px solid",
           borderColor: activeRowBorderColor,
+          borderLeftStyle: rowBorderStyle,
+          borderRightStyle: rowBorderStyle,
+          borderBottomStyle: rowBorderStyle,
           borderTop: "none",
         }}
         onClick={handleRowClick}
