@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+
 import { sort } from "fast-sort";
-import { selectAction, updateAction } from "../lookupProfilesJobTableActions";
-import styles from "../../page.module.css";
-import Row from "./lookupProfilesJobRow";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import styles from "../../page.module.css";
+import { selectAction, updateAction } from "../lookupProfilesJobTableActions";
+import Row from "./lookupProfilesJobRow";
 
 export default function LookupProfilesTable({ env }) {
   const [list, setList] = useState([]);
@@ -26,7 +27,10 @@ export default function LookupProfilesTable({ env }) {
 
   const updateRow = async (row) => {
     // attempt to update db
-    const result = await updateAction({ ...row, last_updated_by: localStorage.getItem("user") }, env);
+    const result = await updateAction(
+      { ...row, last_updated_by: localStorage.getItem("user") },
+      env
+    );
 
     if (!result) {
       toast.error("Failed to update row");

@@ -1,11 +1,12 @@
 "use client";
-import { useRouter } from "next/navigation";
-import styles from "./page.module.css";
+
 import Cookie from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import { authenticate } from "./actions";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { authenticate } from "./actions";
+import styles from "./page.module.css";
 
 export default function Home() {
   const router = useRouter();
@@ -72,7 +73,7 @@ export default function Home() {
         <p>{loading ? "Logging In..." : "Streaming Manager"}</p>
       </div>
 
-      <div style={{width: '70%'}}>
+      <div style={{ width: "70%" }}>
         <form className={styles.flex_col} onSubmit={login}>
           <input type="email" name="email" placeholder="Email" />
           <div style={{ position: "relative" }}>

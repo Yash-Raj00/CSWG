@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { Modal } from "react-responsive-modal";
-
 import styles from "../../page.module.css";
 import "react-responsive-modal/styles.css";
+import { useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 import {
-  dbTypePayload,
-  groupTypePayload,
   activePayload,
+  dbTypePayload,
   facilityPayload,
+  groupTypePayload,
 } from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
-import { useSearchParams } from "next/navigation";
-import { toast } from "react-toastify";
 
 export default function Row({
   row,

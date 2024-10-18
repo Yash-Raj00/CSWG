@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
-
 import styles from "../../page.module.css";
-
 import Row from "./row";
 
 export default function Table({ data, updateRow }) {

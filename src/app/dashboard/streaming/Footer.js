@@ -24,26 +24,28 @@ function Footer({ data, loading }) {
     setGroupCounts(grpCounts);
   }, [data]);
 
-  return !loading && (
-    <>
-      <div className="footer">
-        {[...groupCounts].map(([key, value]) => (
-          <span
-            key={key}
-            style={{ fontSize: 14, marginLeft: 25, marginRight: 25 }}
-          >
-            {key}: {value}
-          </span>
-        ))}
-      </div>
-      <button
-        disabled={loading}
-        style={{ marginTop: "20px", padding: "2px 6px" }}
-        onClick={exportToJson}
-      >
-        Export JSON
-      </button>
-    </>
+  return (
+    !loading && (
+      <>
+        <div className="footer">
+          {[...groupCounts].map(([key, value]) => (
+            <span
+              key={key}
+              style={{ fontSize: 14, marginLeft: 25, marginRight: 25 }}
+            >
+              {key}: {value}
+            </span>
+          ))}
+        </div>
+        <button
+          disabled={loading}
+          style={{ marginTop: "20px", padding: "2px 6px" }}
+          onClick={exportToJson}
+        >
+          Export JSON
+        </button>
+      </>
+    )
   );
 }
 

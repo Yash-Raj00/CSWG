@@ -1,25 +1,24 @@
 "use client";
-import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { sort } from "fast-sort";
-import { saveAs } from "file-saver";
-
+import { MultiSelect } from "react-multi-select-component";
+import styles from "../../page.module.css";
 import {
   deleteAction,
-  unvoidAction,
   selectAction,
+  unvoidAction,
   updateAction,
   updateLastRunAction,
 } from "../actions";
-import styles from "../../page.module.css";
-import Table from "./table";
-import InsertModal from "./insertModal";
 import { dbTypePayload, facilityPayload, groupTypePayload } from "./constants";
 import Footer from "./Footer";
+import InsertModal from "./insertModal";
 import ScrollButton from "./ScrollButton";
-import { MultiSelect } from "react-multi-select-component";
+import Table from "./table";
 
 const AVAILABLE_SORT_OPTIONS = ["Time Updated", "Source Name"];
 
@@ -204,25 +203,25 @@ export default function Streaming() {
     setSelectedSource(e.target.value);
   };
 
-  const createRunFreqReset = async (definedGroup) => {
-    const results = [];
+  // const createRunFreqReset = async (definedGroup) => {
+  //     const results = [];
 
-    for (let i = 0; i < list.length; i++) {
-      const row = list[i];
-      if (
-        row.active !== "Y" ||
-        row.groupid !== definedGroup ||
-        row.run_frequency_in_secs < 3600
-      ) {
-        continue;
-      }
-      const query = `UPDATE wip_configurations.spark_streaming_table_config SET run_frequency_in_secs = 300 WHERE source_system_name = '${row.source_system_name}' AND source_table_name = '${row.source_table_name}';`;
+  //     for (let i = 0; i < list.length; i++) {
+  //         const row = list[i];
+  //         if (
+  //             row.active !== "Y" ||
+  //             row.groupid !== definedGroup ||
+  //             row.run_frequency_in_secs < 3600
+  //         ) {
+  //             continue;
+  //         }
+  //         const query = `UPDATE wip_configurations.spark_streaming_table_config SET run_frequency_in_secs = 300 WHERE source_system_name = '${row.source_system_name}' AND source_table_name = '${row.source_table_name}';`;
 
-      results.push(query);
-    }
+  //         results.push(query);
+  //     }
 
-    handleCopy(results.join("\n"));
-  };
+  //     handleCopy(results.join("\n"));
+  // };
 
   const filteredList = list.filter((item) => {
     const matchesActive = activeOnly ? item.active === "Y" : true;
@@ -237,7 +236,7 @@ export default function Streaming() {
     const matchesFacilities =
       selectedFacilities.length > 0
         ? selectedFacilities.some((facility) =>
-            item.facility?.split(', ').includes(facility.value)
+            item.facility?.split(", ").includes(facility.value)
           )
         : true;
 

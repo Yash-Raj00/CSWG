@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { MultiSelect } from "react-multi-select-component";
 import Modal from "react-responsive-modal";
-import styles from "./insertModal.module.css";
 import { insertAction } from "../actions";
 import { dbTypePayload, facilityPayload, groupTypePayload } from "./constants";
-import { useSearchParams } from "next/navigation";
-import { MultiSelect } from "react-multi-select-component";
+import styles from "./insertModal.module.css";
 
 const initialFormData = {
   source_system_name: "",
@@ -59,7 +59,10 @@ const InsertModal = ({
     e.preventDefault();
 
     const hasEmptyFields = Object.entries(formData).some(
-      ([key, value]) => (formData.source_system_dbtype === "REST-Webservice" && !formData.rest_url) || (key !== "facility" && key !== "rest_url" && value === "")
+      ([key, value]) =>
+        (formData.source_system_dbtype === "REST-Webservice" &&
+          !formData.rest_url) ||
+        (key !== "facility" && key !== "rest_url" && value === "")
     );
 
     if (hasEmptyFields) {

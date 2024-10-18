@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 import styles from "../../page.module.css";
-import { activePayload } from "../streaming/constants";
 
 export default function Row({ row, updateRow }) {
   const [changed, setChanged] = useState(false);
