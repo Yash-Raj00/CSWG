@@ -19,7 +19,6 @@ import InsertModal from "./insertModal";
 import { dbTypePayload, facilityPayload, groupTypePayload } from "./constants";
 import Footer from "./Footer";
 import ScrollButton from "./ScrollButton";
-import { MultiSelect } from "react-multi-select-component";
 
 const AVAILABLE_SORT_OPTIONS = ["Time Updated", "Source Name"];
 
@@ -45,7 +44,7 @@ export default function Streaming() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedSource, setSelectedSource] = useState("");
-  const [selectedFacilities, setSelectedFacilities] = useState([]);
+  const [selectedFacility, setSelectedFacility] = useState("");
 
   const onOpenModal = () => setModalOpen(true);
 
@@ -204,6 +203,10 @@ export default function Streaming() {
     setSelectedSource(e.target.value);
   };
 
+  const handleFacilityChange = (e) => {
+    setSelectedFacility(e.target.value);
+  };
+
   const createRunFreqReset = async (definedGroup) => {
     const results = [];
 
@@ -234,12 +237,9 @@ export default function Streaming() {
       ? item.source_system_name === selectedSource
       : true;
     const matchesGroup = selectedGroup ? item.groupid === selectedGroup : true;
-    const matchesFacilities =
-      selectedFacilities.length > 0
-        ? selectedFacilities.some((facility) =>
-            item.facility?.split(', ').includes(facility.value)
-          )
-        : true;
+    const matchesFacility = selectedFacility
+      ? item.facility?.includes(selectedFacility)
+      : true;
 
     return (
       matchesActive &&
@@ -247,7 +247,7 @@ export default function Streaming() {
       matchesSource &&
       matchesType &&
       matchesGroup &&
-      matchesFacilities
+      matchesFacility
     );
   });
 
@@ -335,23 +335,18 @@ export default function Streaming() {
             </select>
           </label>
         </div>
-        <div
-          style={{
-            marginRight: 20,
-            display: "flex",
-            gap: 2,
-            alignItems: "center",
-          }}
-        >
-          Facility:
-          <span style={{ fontSize: 10, width: 165 }}>
-            <MultiSelect
-              options={facilityPayload}
-              value={selectedFacilities}
-              onChange={setSelectedFacilities}
-              labelledBy="Facility"
-            />
-          </span>
+        <div style={{ marginRight: 20 }}>
+          <label>
+            Facility:
+            <select value={selectedFacility} onChange={handleFacilityChange}>
+              <option value="">All</option>
+              {facilityPayload.map((faci) => (
+                <option key={faci.value} value={faci.value}>
+                  {faci.label}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
         <div style={{ marginRight: 20 }}>
           <label>
