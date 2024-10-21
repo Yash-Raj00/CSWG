@@ -10,8 +10,7 @@ function ExpandedRowContent({
   handleChange,
   handleRemoveLastRun,
   handleDuplicateRow,
-  tempFacilities,
-  handleTempFacilityChange,
+  handleFacilityChange,
 }) {
   const tableRowStyle = {
     display: "inline-flex",
@@ -21,6 +20,21 @@ function ExpandedRowContent({
   };
 
   const isVoid = streamingRow.voided_by;
+
+  // convert facility string to array
+  const facilities = streamingRow.facility
+    ? streamingRow.facility
+        .split(",")
+        .map((facilityRow) => {
+          const foundFacility = facilityPayload.find(
+            (item) => item.value === facilityRow.trim()
+          );
+          return foundFacility;
+        })
+        .filter((item) => item)
+    : [];
+
+  // console.log("facilities", streamingRow, facilities);
 
   return (
     <div
@@ -74,8 +88,8 @@ function ExpandedRowContent({
         >
           <MultiSelect
             options={facilityPayload}
-            value={tempFacilities}
-            onChange={(faci) => handleTempFacilityChange(faci)}
+            value={facilities}
+            onChange={(facility) => handleFacilityChange(facility)}
             labelledBy="Facility"
           />
         </span>

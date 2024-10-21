@@ -3,12 +3,7 @@ import { Modal } from "react-responsive-modal";
 
 import styles from "../../page.module.css";
 import "react-responsive-modal/styles.css";
-import {
-  dbTypePayload,
-  groupTypePayload,
-  activePayload,
-  facilityPayload,
-} from "./constants";
+import { dbTypePayload, groupTypePayload, activePayload } from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
 import { useSearchParams } from "next/navigation";
@@ -30,20 +25,18 @@ export default function Row({
   const [showExpanded, setShowExpanded] = useState(false);
   const [isSelectedRow, setSelectedRow] = useState(false);
 
-  var facilities = [];
+  const handleFacilityChange = (selectedFacilities) => {
+    // strip object down to value only
+    const facilities = [
+      ...selectedFacilities.map((facility) => facility.value),
+    ];
+    // console.log("handleFacilityChange", selectedFacilities, facilities);
 
-  if (row.facility?.length && !row.facility?.includes("http")) {
-    facilities = row.facility?.split(", ");
-  }
-
-  const [tempFacilities, setTempFacilities] = useState(
-    facilities.map((facilityCode) =>
-      facilityPayload.find((item) => item.value === facilityCode)
-    )
-  );
-
-  const handleTempFacilityChange = (faci) => {
-    setTempFacilities(faci);
+    // join array to string
+    setStreamingRow({
+      ...streamingRow,
+      facility: facilities.join(", "),
+    });
     setChanged(true);
   };
 
@@ -71,10 +64,7 @@ export default function Row({
     ) {
       return alert("Invalid Default Run Frequency value.");
     }
-    updateRow({
-      ...streamingRow,
-      facility: tempFacilities.map((faci) => faci.value).join(", "),
-    });
+    updateRow(streamingRow);
     setChanged(false);
   };
 
@@ -338,8 +328,7 @@ export default function Row({
               handleChange={handleChange}
               handleRemoveLastRun={handleRemoveLastRun}
               handleDuplicateRow={handleDuplicateRow}
-              tempFacilities={tempFacilities}
-              handleTempFacilityChange={handleTempFacilityChange}
+              handleFacilityChange={handleFacilityChange}
             />
           </td>
         </tr>
