@@ -237,8 +237,10 @@ export default function Streaming() {
       ? item.source_system_name === selectedSource
       : true;
     const matchesGroup = selectedGroup ? item.groupid === selectedGroup : true;
-    const matchesFacility = selectedFacility
-      ? item.facility?.includes(selectedFacility)
+    let matchesFacility = selectedFacility
+      ? selectedFacility === "none"
+        ? !item.facility 
+        : item.facility?.includes(selectedFacility)
       : true;
 
     return (
@@ -340,6 +342,7 @@ export default function Streaming() {
             Facility:
             <select value={selectedFacility} onChange={handleFacilityChange}>
               <option value="">All</option>
+              <option value="none">No Facility</option>
               {facilityPayload.map((faci) => (
                 <option key={faci.value} value={faci.value}>
                   {faci.label}
