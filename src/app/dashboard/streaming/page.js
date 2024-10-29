@@ -237,11 +237,9 @@ export default function Streaming() {
       ? item.source_system_name === selectedSource
       : true;
     const matchesGroup = selectedGroup ? item.groupid === selectedGroup : true;
-    let matchesFacility = selectedFacility
-      ? selectedFacility === "NO FACILITY"
-        ? !item.facility 
-        : item.facility?.includes(selectedFacility)
-      : true;
+    const matchesFacility =
+      !selectedFacility || 
+      (selectedFacility === "NO FACILITY" ? !item.facility : item.facility?.includes(selectedFacility));
 
     return (
       matchesActive &&
