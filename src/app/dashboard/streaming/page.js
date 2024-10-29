@@ -238,7 +238,7 @@ export default function Streaming() {
       : true;
     const matchesGroup = selectedGroup ? item.groupid === selectedGroup : true;
     let matchesFacility = selectedFacility
-      ? selectedFacility === "none"
+      ? selectedFacility === "NO FACILITY"
         ? !item.facility 
         : item.facility?.includes(selectedFacility)
       : true;
@@ -342,7 +342,7 @@ export default function Streaming() {
             Facility:
             <select value={selectedFacility} onChange={handleFacilityChange}>
               <option value="">All</option>
-              <option value="none">No Facility</option>
+              <option value="NO FACILITY">NO FACILITY</option>
               {facilityPayload.map((faci) => (
                 <option key={faci.value} value={faci.value}>
                   {faci.label}
