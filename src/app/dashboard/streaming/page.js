@@ -238,8 +238,10 @@ export default function Streaming() {
       : true;
     const matchesGroup = selectedGroup ? item.groupid === selectedGroup : true;
     const matchesFacility =
-      !selectedFacility || 
-      (selectedFacility === "NO FACILITY" ? !item.facility : item.facility?.includes(selectedFacility));
+      !selectedFacility ||
+      (selectedFacility === "NO FACILITY"
+        ? !item.facility
+        : item.facility?.split(", ").includes(selectedFacility));
 
     return (
       matchesActive &&
