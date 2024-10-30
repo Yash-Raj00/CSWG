@@ -59,11 +59,11 @@ const InsertModal = ({
     e.preventDefault();
 
     const hasEmptyFields = Object.entries(formData).some(
-      ([key, value]) => (formData.source_system_dbtype === "REST-Webservice" && !formData.rest_url) || (key !== "facility" && key !== "rest_url" && value === "")
+      ([key, value]) => (key !== "facility" && key !== "rest_url" && value === "")
     );
 
     if (hasEmptyFields) {
-      setFormError("All fields except 'Facility' must be filled in.");
+      setFormError("All fields except 'Facility' & 'Rest URL' must be filled in.");
       return;
     }
 
