@@ -8,6 +8,7 @@ import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
 import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { selectRowsWhereAction } from "../actions";
 
 export default function Row({
   row,
@@ -53,7 +54,7 @@ export default function Row({
     setChanged(true);
   };
 
-  const commitChanges = () => {
+  const commitChanges = async () => {
     const parsed_default_run_frequency_in_secs = parseInt(
       streamingRow.default_run_frequency_in_secs
     );
@@ -64,7 +65,24 @@ export default function Row({
     ) {
       return alert("Invalid Default Run Frequency value.");
     }
-    updateRow(streamingRow);
+    const latestRowInfo = await selectRowsWhereAction(
+      env,
+      streamingRow.source_system_name,
+      streamingRow.source_table_name
+    );
+    if (
+      latestRowInfo &&
+      latestRowInfo.length &&
+      latestRowInfo[0].updated_date !=
+        streamingRow.updated_date.toString().split(".")[0]
+    ) {
+      return toast.error(
+        "Can't update, this row has been updated please do refresh to fetch latest information."
+      );
+    }
+    const newDate = Date.now() / 1000;
+    streamingRow.updated_date = newDate;
+    updateRow(streamingRow, newDate);
     setChanged(false);
   };
 

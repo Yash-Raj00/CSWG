@@ -118,7 +118,7 @@ const updateLastRunAction = async (row, env) => {
   return await UpdateQuery(updateLastRunTimestamp, params, env);
 };
 
-const updateAction = async (row, env) => {
+const updateAction = async (row, newDate = "", env) => {
   const {
     groupid,
     active,
@@ -137,7 +137,7 @@ const updateAction = async (row, env) => {
     source_system_dbtype,
   } = row;
 
-  const update_time = Date.now() / 1000;
+  const update_time = newDate || Date.now() / 1000;
 
   let target_table_list;
 
