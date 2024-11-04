@@ -12,6 +12,7 @@ import {
   selectAction,
   updateAction,
   updateLastRunAction,
+  selectRowsWhereAction,
 } from "../actions";
 import styles from "../../page.module.css";
 import Table from "./table";
@@ -88,6 +89,10 @@ export default function Streaming() {
   };
 
   const updateRow = async (row) => {
+  const latestRowInfo =  await selectRowsWhereAction(env, row.source_system_name, row.source_table_name);
+  if (latestRowInfo && latestRowInfo.length && latestRowInfo[0].updated_date != row.updated_date) {
+    return toast.error("Can't update, this row has been updated please do refresh to fetch latest information.")
+  }
     const result = await updateAction(row, env);
 
     if (!result) {

@@ -6,10 +6,14 @@ import {
   SelectQuery,
   InsertQuery,
   DeleteQuery,
+  SelectWhereQuery,
 } from "@/lib/common/db/pool";
 
 const selectRowsQuery =
   "select * from wip_configurations.spark_streaming_table_config ALLOW FILTERING";
+
+const selectRowsWhereQuery =
+  "select * from wip_configurations.spark_streaming_table_config WHERE source_system_name = ? and source_table_name = ? ALLOW FILTERING";
 
 const updateRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
   SET groupid = ?, active = ?, run_frequency_in_secs = ?, default_run_frequency_in_secs = ?, source_table_query = ? , 
@@ -79,10 +83,10 @@ const load_loaders_by_warehouse_list = [
   "wip_shipping_ing.load_trans_by_loader",
 ];
 
-const load_details_by_warehouse_stream_list = [
-  "wip_shipping_ing.load_details_by_warehouse_stream",
-  "wip_shipping_ing.load_details_by_warehouse_stream_hist",
-];
+// const load_details_by_warehouse_stream_list = [
+//   "wip_shipping_ing.load_details_by_warehouse_stream",
+//   "wip_shipping_ing.load_details_by_warehouse_stream_hist",
+// ];
 
 const warehouse_recv_secondpass_data_list = [
   "wip_rcv_ing.warehouse_recv_secondpass_data",
@@ -102,6 +106,10 @@ const lumperlink_data_by_warehouse_list = [
 
 const selectAction = async (env) => {
   return await SelectQuery(selectRowsQuery, env);
+};
+
+const selectRowsWhereAction = async (env, source_system_name, source_table_name) => {
+  return await SelectWhereQuery(selectRowsWhereQuery, {source_system_name, source_table_name}, env);
 };
 
 const updateLastRunAction = async (row, env) => {
@@ -161,9 +169,6 @@ const updateAction = async (row, env) => {
       break;
     case "load_loaders_by_warehouse":
       target_table_list = load_loaders_by_warehouse_list;
-      break;
-    case "load_details_by_warehouse_stream":
-      target_table_list = load_details_by_warehouse_stream_list;
       break;
     case "warehouse_recv_secondpass_data":
       target_table_list = warehouse_recv_secondpass_data_list;
@@ -286,6 +291,7 @@ const unvoidAction = async (row, env) => {
 
 export {
   selectAction,
+  selectRowsWhereAction,
   updateAction,
   insertAction,
   deleteAction,
