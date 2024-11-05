@@ -230,13 +230,17 @@ export default function Streaming() {
   const filteredList = list.filter((item) => {
     const matchesActive = activeOnly ? item.active === "Y" : true;
     const matchesVoid = notVoidOnly ? !item.voided_by : true;
-    const matchesType = selectedType
-      ? item.source_system_dbtype === selectedType
-      : true;
+    const matchesType =
+      !selectedType ||
+      (selectedType === "Not set" && !item.source_system_dbtype) ||
+      item.source_system_dbtype === selectedType;
     const matchesSource = selectedSource
       ? item.source_system_name === selectedSource
       : true;
-    const matchesGroup = selectedGroup ? item.groupid === selectedGroup : true;
+    const matchesGroup =
+      !selectedGroup ||
+      (selectedGroup === "NOT SET" && !item.groupid) ||
+      item.groupid === selectedGroup;
     const matchesFacility =
       !selectedFacility ||
       (selectedFacility === "NO FACILITY"

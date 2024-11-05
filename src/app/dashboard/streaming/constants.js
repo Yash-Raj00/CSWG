@@ -1,5 +1,5 @@
 export const dbTypePayload = [
-  { value: "", label: "Not set" },
+  { value: "Not set", label: "Not set" },
   { value: "sqlserver-lucas", label: "SQL lucas" },
   { value: "Cassandra", label: "Cassandra" },
   { value: "datacomm-lucas", label: "datacomm-lucas" },
@@ -11,6 +11,7 @@ export const dbTypePayload = [
 ];
 
 export const groupTypePayload = [
+  { value: "NOT SET", label: "NOT SET" },
   { value: "GRP1", label: "GRP1" },
   { value: "GRP2", label: "GRP2" },
   { value: "GRP3", label: "GRP3" },
@@ -23,6 +24,7 @@ export const groupTypePayload = [
 ];
 
 export const activePayload = [
+  { value: "--", label: "--" },
   { value: "Y", label: "Y" },
   { value: "N", label: "N" },
 ];
