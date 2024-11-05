@@ -79,10 +79,10 @@ const load_loaders_by_warehouse_list = [
   "wip_shipping_ing.load_trans_by_loader",
 ];
 
-const load_details_by_warehouse_stream_list = [
-  "wip_shipping_ing.load_details_by_warehouse_stream",
-  "wip_shipping_ing.load_details_by_warehouse_stream_hist",
-];
+// const load_details_by_warehouse_stream_list = [
+//   "wip_shipping_ing.load_details_by_warehouse_stream",
+//   "wip_shipping_ing.load_details_by_warehouse_stream_hist",
+// ];
 
 const warehouse_recv_secondpass_data_list = [
   "wip_rcv_ing.warehouse_recv_secondpass_data",
@@ -161,9 +161,6 @@ const updateAction = async (row, env) => {
       break;
     case "load_loaders_by_warehouse":
       target_table_list = load_loaders_by_warehouse_list;
-      break;
-    case "load_details_by_warehouse_stream":
-      target_table_list = load_details_by_warehouse_stream_list;
       break;
     case "warehouse_recv_secondpass_data":
       target_table_list = warehouse_recv_secondpass_data_list;

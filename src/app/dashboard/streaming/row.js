@@ -151,7 +151,7 @@ export default function Row({
       <tr
         id="headRow"
         onClick={handleRowClick}
-        className={styles.row}
+        className={styles.streamingRow}
         style={{
           backgroundColor: activeRowColor,
           borderColor: activeRowBorderColor,

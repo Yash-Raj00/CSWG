@@ -34,9 +34,9 @@ export default function Row({ row, updateRow }) {
       </td>
       <td className={styles.td}>
         <select
-          name="enable"
+          name="enabled"
           onChange={handleChange}
-          value={streamingRow.enable}
+          value={streamingRow.enabled}
         >
           {activePayload.map((item) => (
             <option key={item.value} value={item.value ?? ""}>
