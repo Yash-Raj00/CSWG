@@ -6,10 +6,14 @@ import {
   SelectQuery,
   InsertQuery,
   DeleteQuery,
+  SelectWhereQuery,
 } from "@/lib/common/db/pool";
 
 const selectRowsQuery =
   "select * from wip_configurations.spark_streaming_table_config ALLOW FILTERING";
+
+const selectRowsWhereQuery =
+  "select * from wip_configurations.spark_streaming_table_config WHERE source_system_name = ? and source_table_name = ? ALLOW FILTERING";
 
 const updateRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
   SET groupid = ?, active = ?, run_frequency_in_secs = ?, default_run_frequency_in_secs = ?, source_table_query = ? , 
@@ -104,13 +108,17 @@ const selectAction = async (env) => {
   return await SelectQuery(selectRowsQuery, env);
 };
 
+const selectRowsWhereAction = async (env, source_system_name, source_table_name) => {
+  return await SelectWhereQuery(selectRowsWhereQuery, {source_system_name, source_table_name}, env);
+};
+
 const updateLastRunAction = async (row, env) => {
   const { source_system_name, source_table_name } = row;
   const params = [source_system_name, source_table_name];
   return await UpdateQuery(updateLastRunTimestamp, params, env);
 };
 
-const updateAction = async (row, env) => {
+const updateAction = async (row, newDate = "", env) => {
   const {
     groupid,
     active,
@@ -129,7 +137,7 @@ const updateAction = async (row, env) => {
     source_system_dbtype,
   } = row;
 
-  const update_time = Date.now() / 1000;
+  const update_time = newDate || Date.now() / 1000;
 
   let target_table_list;
 
@@ -283,6 +291,7 @@ const unvoidAction = async (row, env) => {
 
 export {
   selectAction,
+  selectRowsWhereAction,
   updateAction,
   insertAction,
   deleteAction,

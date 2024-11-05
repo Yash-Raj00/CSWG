@@ -87,8 +87,8 @@ export default function Streaming() {
     setNotVoidOnly(e.target.checked);
   };
 
-  const updateRow = async (row) => {
-    const result = await updateAction(row, env);
+  const updateRow = async (row, newDate) => {
+    const result = await updateAction(row, newDate, env);
 
     if (!result) {
       toast.error("Failed to update row");
