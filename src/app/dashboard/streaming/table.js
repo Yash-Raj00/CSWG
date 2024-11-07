@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../page.module.css";
-import React from "react";
 import Row from "./row";
 
 export default function Table({
@@ -33,7 +32,7 @@ export default function Table({
       <tbody>
         {data.map((row, index) => (
           <Row
-            row={{ ...row}}
+            row={{ ...row }}
             index={index}
             updateRow={updateRow}
             deleteRow={deleteRow}

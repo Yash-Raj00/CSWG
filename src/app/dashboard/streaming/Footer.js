@@ -1,3 +1,4 @@
+import { saveAs } from "file-saver";
 import React, { useEffect, useState } from "react";
 import { groupTypePayload } from "./constants";
 
@@ -17,33 +18,35 @@ function Footer({ data, loading }) {
     });
     data.forEach((item) => {
       grpCounts.set(
-        item.groupid || "unknown",
-        (grpCounts.get(item.groupid || "unknown") || 0) + 1
+        item.groupid || "NOT SET",
+        (grpCounts.get(item.groupid || "NOT SET") || 0) + 1
       );
     });
     setGroupCounts(grpCounts);
   }, [data]);
 
-  return !loading && (
-    <>
-      <div className="footer">
-        {[...groupCounts].map(([key, value]) => (
-          <span
-            key={key}
-            style={{ fontSize: 14, marginLeft: 25, marginRight: 25 }}
-          >
-            {key}: {value}
-          </span>
-        ))}
-      </div>
-      <button
-        disabled={loading}
-        style={{ marginTop: "20px", padding: "2px 6px" }}
-        onClick={exportToJson}
-      >
-        Export JSON
-      </button>
-    </>
+  return (
+    !loading && (
+      <>
+        <div className="footer">
+          {[...groupCounts].map(([key, value]) => (
+            <span
+              key={key}
+              style={{ fontSize: 14, marginLeft: 25, marginRight: 25 }}
+            >
+              {key}: {value}
+            </span>
+          ))}
+        </div>
+        <button
+          disabled={loading}
+          style={{ marginTop: "20px", padding: "2px 6px" }}
+          onClick={exportToJson}
+        >
+          Export JSON
+        </button>
+      </>
+    )
   );
 }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaArrowCircleUp, FaArrowCircleDown } from "react-icons/fa";
+import { FaArrowCircleDown, FaArrowCircleUp } from "react-icons/fa";
 import styles from "../../page.module.css";
 
 const ScrollButton = () => {
@@ -7,9 +7,7 @@ const ScrollButton = () => {
     <div className={styles.arrowBtns}>
       <FaArrowCircleUp
         className={styles.arrowBtn}
-        onClick={() => window.scrollTo({ top: 0, 
-          behavior: "smooth"
-         })}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       />
       <FaArrowCircleDown
         className={styles.arrowBtn}
