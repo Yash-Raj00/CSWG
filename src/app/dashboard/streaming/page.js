@@ -31,7 +31,7 @@ export default function Streaming() {
 
   const [list, setList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [activeOnly, setActiveOnly] = useState(false);
+  const [activeOnly, setActiveOnly] = useState(true);
   const [notVoidOnly, setNotVoidOnly] = useState(true);
   const [rowToDuplicate, setRowToDuplicate] = useState();
   const [loading, setLoading] = useState(true);
