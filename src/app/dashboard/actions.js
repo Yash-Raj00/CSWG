@@ -1,11 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import {
-  UpdateQuery,
-  SelectQuery,
-  InsertQuery,
   DeleteQuery,
+  InsertQuery,
+  SelectQuery,
+  UpdateQuery,
 } from "@/lib/common/db/pool";
 
 const selectRowsQuery =

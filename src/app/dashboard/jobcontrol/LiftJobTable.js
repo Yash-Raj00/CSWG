@@ -1,12 +1,9 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
-import {
-  selectAction,
-  updateAction,
-} from "../liftJobActions";
 import styles from "../../page.module.css";
+import { selectAction, updateAction } from "../liftJobActions";
 import Row from "./liftJobRow";
 
 export default function LiftTable({ env }) {

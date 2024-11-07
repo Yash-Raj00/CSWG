@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { SelectQuery } from "@/lib/common/db/pool";
 
 const selectAction = async (env) => {
@@ -10,8 +9,8 @@ const selectAction = async (env) => {
   LIMIT 500
   ALLOW FILTERING`;
   const data = await SelectQuery(selectShippingJobRowsQueryToday, env);
-  const orderedData = data.sort(
-    (a, b) => b.created_date.localeCompare(a.created_date)
+  const orderedData = data.sort((a, b) =>
+    b.created_date.localeCompare(a.created_date)
   );
 
   return orderedData;

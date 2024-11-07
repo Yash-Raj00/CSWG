@@ -1,10 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import {
-  UpdateQuery,
-  SelectQuery,
-} from "@/lib/common/db/pool";
+import { SelectQuery, UpdateQuery } from "@/lib/common/db/pool";
 
 const selectLiftJobRowsQuery = "select * from wip_lift_ing.lift_job_control";
 
@@ -21,14 +17,9 @@ const updateAction = async (row, env) => {
 
   const update_time = new Date().toISOString().slice(0, 19).replace("T", " ");
 
-  const params = [
-    enable,
-    update_time,
-    job_id,
-    warehouse_id,
-  ];
+  const params = [enable, update_time, job_id, warehouse_id];
 
   return await UpdateQuery(updateRowQuery, params, env);
 };
 
-export { selectAction, updateAction, };
+export { selectAction, updateAction };

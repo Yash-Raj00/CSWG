@@ -1,13 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+
 import { sort } from "fast-sort";
-import {
-  selectAction,
-  updateAction,
-} from "../warehouseJobActions";
-import styles from "../../page.module.css";
-import Row from "./warehouseJobRow";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import styles from "../../page.module.css";
+import { selectAction, updateAction } from "../warehouseJobActions";
+import Row from "./warehouseJobRow";
 
 export default function WarehouseTable({ env }) {
   const [list, setList] = useState([]);

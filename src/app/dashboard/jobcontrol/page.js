@@ -1,13 +1,13 @@
 "use client";
+
+import { useSearchParams } from "next/navigation";
 import { ToastContainer } from "react-toastify";
 import styles from "../../page.module.css";
-import { useSearchParams } from "next/navigation";
-
 import LiftTable from "./LiftJobTable";
+import LookupProfilesTable from "./LookupProfilesJobTable";
 import ReceivingJobTable from "./ReceivingJobTable";
 import ShippingTable from "./ShippingJobTable";
 import WarehouseTable from "./warehouseTable";
-import LookupProfilesTable from "./LookupProfilesJobTable";
 
 export default function Jobs() {
   const searchParams = useSearchParams();
