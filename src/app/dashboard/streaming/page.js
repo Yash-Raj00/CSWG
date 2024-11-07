@@ -44,7 +44,7 @@ export default function Streaming() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedSource, setSelectedSource] = useState("");
-  const [selectedFacilities, setSelectedFacilities] = useState([]);
+  const [selectedFacility, setSelectedFacility] = useState("");
 
   const onOpenModal = () => setModalOpen(true);
 
@@ -203,6 +203,10 @@ export default function Streaming() {
     setSelectedSource(e.target.value);
   };
 
+  const handleFacilityChange = (e) => {
+    setSelectedFacility(e.target.value);
+  };
+
   // const createRunFreqReset = async (definedGroup) => {
   //     const results = [];
 
@@ -226,19 +230,22 @@ export default function Streaming() {
   const filteredList = list.filter((item) => {
     const matchesActive = activeOnly ? item.active === "Y" : true;
     const matchesVoid = notVoidOnly ? !item.voided_by : true;
-    const matchesType = selectedType
-      ? item.source_system_dbtype === selectedType
-      : true;
+    const matchesType =
+      !selectedType ||
+      (selectedType === "Not set" && !item.source_system_dbtype) ||
+      item.source_system_dbtype === selectedType;
     const matchesSource = selectedSource
       ? item.source_system_name === selectedSource
       : true;
-    const matchesGroup = selectedGroup ? item.groupid === selectedGroup : true;
-    const matchesFacilities =
-      selectedFacilities.length > 0
-        ? selectedFacilities.some((facility) =>
-            item.facility?.split(", ").includes(facility.value)
-          )
-        : true;
+    const matchesGroup =
+      !selectedGroup ||
+      (selectedGroup === "NOT SET" && !item.groupid) ||
+      item.groupid === selectedGroup;
+    const matchesFacility =
+      !selectedFacility ||
+      (selectedFacility === "NO FACILITY"
+        ? !item.facility
+        : item.facility?.split(", ").includes(selectedFacility));
 
     return (
       matchesActive &&
@@ -246,7 +253,7 @@ export default function Streaming() {
       matchesSource &&
       matchesType &&
       matchesGroup &&
-      matchesFacilities
+      matchesFacility
     );
   });
 
@@ -334,23 +341,19 @@ export default function Streaming() {
             </select>
           </label>
         </div>
-        <div
-          style={{
-            marginRight: 20,
-            display: "flex",
-            gap: 2,
-            alignItems: "center",
-          }}
-        >
-          Facility:
-          <span style={{ fontSize: 10, width: 165 }}>
-            <MultiSelect
-              options={facilityPayload}
-              value={selectedFacilities}
-              onChange={setSelectedFacilities}
-              labelledBy="Facility"
-            />
-          </span>
+        <div style={{ marginRight: 20 }}>
+          <label>
+            Facility:
+            <select value={selectedFacility} onChange={handleFacilityChange}>
+              <option value="">All</option>
+              <option value="NO FACILITY">NO FACILITY</option>
+              {facilityPayload.map((faci) => (
+                <option key={faci.value} value={faci.value}>
+                  {faci.label}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
         <div style={{ marginRight: 20 }}>
           <label>

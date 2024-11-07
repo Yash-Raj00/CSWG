@@ -113,6 +113,14 @@
   border-left: 3px solid;
   border-right: 3px solid;
 }
+
+.streamingRow {
+  margin-bottom: 3px;
+  border-top: 3px;
+  border-left: 3px;
+  border-right: 3px;
+  border-bottom: 0px;
+}
 .rowMid {
   margin-bottom: 3px;
   border-left: 3px solid;
@@ -137,10 +145,10 @@
   text-align: center;
 }
 .border_l_2 {
-  border-left: 2px solid #ffffff;
+  border-left: 2px #ffffff;
 }
 .border_r_2 {
-  border-right: 2px solid #ffffff;
+  border-right: 2px #ffffff;
 }
 
 .grid {

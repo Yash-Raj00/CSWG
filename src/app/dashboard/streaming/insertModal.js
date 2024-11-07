@@ -66,7 +66,7 @@ const InsertModal = ({
     );
 
     if (hasEmptyFields) {
-      setFormError("All fields except 'Facility' must be filled in.");
+      setFormError("All fields except 'Facility' & 'Rest URL' must be filled in.");
       return;
     }
 

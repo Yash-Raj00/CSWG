@@ -30,6 +30,75 @@ const unvoidRowQuery = `UPDATE wip_configurations.spark_streaming_table_config
   SET voided_by = ?, active = ?, updated_date = ?
   WHERE source_system_name = ? and source_table_name = ?`;
 
+// target table that needs extra additions
+const picks_by_employee_id_list = [
+  "wip_warehouse_data.picks_by_employee_id",
+  "wip_warehouse_data.picks_by_update_time",
+  "wip_warehouse_data.picks_by_employee_id_history",
+];
+
+const rds_loads_ing_details_list = [
+  "wip_rcv_ing.rds_loads_ing_details",
+  "wip_rcv_hist.rds_loads_ing_details_hist",
+];
+
+const rds_unsched_bh_ing_details_list = [
+  "wip_rcv_ing.rds_unsched_bh_ing_details",
+  "wip_rcv_hist.rds_unsched_bh_ing_details_hist",
+];
+
+const aba_capacity_by_opsday_list = [
+  "wip_shipping_ing.aba_capacity_by_opsday",
+  "wip_shipping_ing.aba_capacity_by_opsday_history",
+];
+
+const employee_images_by_id_list = [
+  "wip_warehouse_data.employee_images_by_id",
+  "wip_warehouse_data.employee_data_by_id",
+];
+
+const attendance_plan_by_shift_list = [
+  "wip_warehouse_data.attendance_plan_by_shift",
+  "wip_warehouse_data.attendance_plan_by_wh_and_shift",
+  "wip_warehouse_data.attendance_plan_by_wh_and_employee",
+];
+
+const aba_thruput_by_warehouse_list = [
+  "wip_warehouse_data.aba_thruput_by_warehouse",
+  "wip_warehouse_data_archive.aba_thruput_by_warehouse_hist",
+];
+
+const planned_thruput_by_warehouse_list = [
+  "wip_warehouse_data.planned_thruput_by_warehouse",
+  "wip_warehouse_data_archive.planned_thruput_by_warehouse_hist",
+];
+
+const load_loaders_by_warehouse_list = [
+  "wip_shipping_ing.load_loaders_by_warehouse",
+  "wip_shipping_ing.load_trans_by_loader",
+];
+
+// const load_details_by_warehouse_stream_list = [
+//   "wip_shipping_ing.load_details_by_warehouse_stream",
+//   "wip_shipping_ing.load_details_by_warehouse_stream_hist",
+// ];
+
+const warehouse_recv_secondpass_data_list = [
+  "wip_rcv_ing.warehouse_recv_secondpass_data",
+  "wip_rcv_hist.warehouse_recv_secondpass_data_hist",
+];
+
+const warehouse_lift_productivity_list = [
+  "wip_lift_ing.warehouse_lift_productivity",
+  "wip_lift_ing.warehouse_lift_productivity_data",
+  "wip_lift_hist.warehouse_lift_productivity_data_hist",
+];
+
+const lumperlink_data_by_warehouse_list = [
+  "wip_rcv_ing.lumperlink_data_by_warehouse",
+  "wip_rcv_hist.lumperlink_data_by_warehouse_hist",
+];
+
 const selectAction = async (env) => {
   return await SelectQuery(selectRowsQuery, env);
 };
@@ -61,7 +130,49 @@ const updateAction = async (row, env) => {
 
   const update_time = Date.now() / 1000;
 
-  const target_table_list = [`${target_keyspace}.${target_table_name}`];
+  let target_table_list;
+
+  // inject extra table list when condition matches
+  switch (target_table_name) {
+    case "picks_by_employee_id":
+      target_table_list = picks_by_employee_id_list;
+      break;
+    case "rds_loads_ing_details":
+      target_table_list = rds_loads_ing_details_list;
+      break;
+    case "rds_unsched_bh_ing_details":
+      target_table_list = rds_unsched_bh_ing_details_list;
+      break;
+    case "aba_capacity_by_opsday":
+      target_table_list = aba_capacity_by_opsday_list;
+      break;
+    case "employee_images_by_id":
+      target_table_list = employee_images_by_id_list;
+      break;
+    case "attendance_plan_by_shift":
+      target_table_list = attendance_plan_by_shift_list;
+      break;
+    case "aba_thruput_by_warehouse":
+      target_table_list = aba_thruput_by_warehouse_list;
+      break;
+    case "planned_thruput_by_warehouse":
+      target_table_list = planned_thruput_by_warehouse_list;
+      break;
+    case "load_loaders_by_warehouse":
+      target_table_list = load_loaders_by_warehouse_list;
+      break;
+    case "warehouse_recv_secondpass_data":
+      target_table_list = warehouse_recv_secondpass_data_list;
+      break;
+    case "warehouse_lift_productivity":
+      target_table_list = warehouse_lift_productivity_list;
+      break;
+    case "lumperlink_data_by_warehouse":
+      target_table_list = lumperlink_data_by_warehouse_list;
+      break;
+    default:
+      target_table_list = [`${target_keyspace}.${target_table_name}`];
+  }
 
   const params = [
     groupid,

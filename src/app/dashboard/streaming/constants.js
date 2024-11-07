@@ -1,5 +1,5 @@
 export const dbTypePayload = [
-  { value: "", label: "Not set" },
+  { value: "Not set", label: "Not set" },
   { value: "sqlserver-lucas", label: "SQL lucas" },
   { value: "Cassandra", label: "Cassandra" },
   { value: "datacomm-lucas", label: "datacomm-lucas" },
@@ -11,6 +11,7 @@ export const dbTypePayload = [
 ];
 
 export const groupTypePayload = [
+  { value: "NOT SET", label: "NOT SET" },
   { value: "GRP1", label: "GRP1" },
   { value: "GRP2", label: "GRP2" },
   { value: "GRP3", label: "GRP3" },
@@ -23,30 +24,32 @@ export const groupTypePayload = [
 ];
 
 export const activePayload = [
+  { value: "--", label: "--" },
   { value: "Y", label: "Y" },
   { value: "N", label: "N" },
 ];
 
 export const facilityPayload = [
-  { label: "Brattleboro, VT (GDC)", value: "1" },
+  { label: "Brat, GDC", value: "1" },
+  { label: "Brat, FDC", value: "2" },
   { label: "Westfield", value: "8" },
   { label: "North Hatfield", value: "14" },
   { label: "Windsor Locks", value: "20" },
   { label: "Aberdeen", value: "23" },
   { label: "Harrington Warehouse", value: "34" },
   { label: "Chester", value: "44" },
+  { label: "Plant City PDC", value: "80" },
   { label: "Plant City GDC", value: "59" },
+  { label: "Plant City FDC", value: "82" },
   { label: "ES3 York", value: "61" },
-  { label: "Bethlehem II", value: "76" },
+  { label: "Beth 2", value: "76" },
+  { label: "Beth 4", value: "88" },
   { label: "Suffield", value: "77" },
   { label: "NEMD", value: "78" },
-  { label: "Plant City PDC", value: "80" },
   { label: "Stockton", value: "81" },
-  { label: "Plant City FDC", value: "82" },
-  { label: "Bethlehem IV (GMD)", value: "88" },
   { label: "Dubois, PA (GDC)", value: "92" },
-  { label: "York Freezer", value: "95" },
   { label: "Dubois, PA (PDC)", value: "97" },
+  { label: "York Freezer", value: "95" },
   { label: "Robesonia Warehouse", value: "904" },
   { label: "North Houston", value: "2501" },
   { label: "Holcombe PDC", value: "2502" },
