@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { sort } from "fast-sort";
-import { MultiSelect } from "react-multi-select-component";
 import styles from "../../page.module.css";
 import {
   deleteAction,
