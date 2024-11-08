@@ -105,22 +105,17 @@ export default function Row({
   };
 
   function convertJsonToSqlUpdate(json) {
-    // Table name
-    const tableName = "wip_configuration.spark_streaming_some_table";
+    const tableName = "wip_configurations.spark_streaming_table_config";
 
-    // Remove fields used in WHERE clause and define the remaining columns for SET clause
     const { source_system_name, source_table_name, ...columns } = json;
 
-    // WHERE
     const whereClause = `WHERE
    source_system_name = '${source_system_name}'
    AND source_table_name = '${source_table_name}';`;
 
-    // Build the SET clause by iterating over the keys and values of the columns object
     const setClause = Object.entries(columns)
       .filter(([, value]) => value !== null)
       .map(([key, value]) => {
-        // Convert value to appropriate SQL format
         if (typeof value === "string") return `   ${key} = '${value}'`;
         if (Array.isArray(value)) {
           console.log(key);
@@ -130,7 +125,6 @@ export default function Row({
       })
       .join(",\n");
 
-    // Combine into the final SQL statement
     const sqlUpdate = `
 UPDATE ${tableName}
 SET

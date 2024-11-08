@@ -1,6 +1,7 @@
+import { getWarehouseName } from "@/utils/helperMethods";
 import { useState } from "react";
 import styles from "../../page.module.css";
-import { activePayload, facilityPayload } from "../streaming/constants";
+import { activePayload } from "../streaming/constants";
 
 export default function Row({ row, updateRow }) {
   const [changed, setChanged] = useState(false);
@@ -30,9 +31,7 @@ export default function Row({ row, updateRow }) {
         <span className={styles.limitedSpan}>
           {streamingRow.warehouse_id +
             ", " +
-            (facilityPayload.find(
-              (val) => val.value == streamingRow.warehouse_id
-            )?.label ?? "Unknown") ?? ""}
+            getWarehouseName(streamingRow.warehouse_id) ?? ""}
         </span>
       </td>
       <td className={styles.td}>
