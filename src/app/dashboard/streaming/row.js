@@ -4,6 +4,7 @@ import styles from "../../page.module.css";
 import "react-responsive-modal/styles.css";
 import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { selectRowsWhereAction } from "../actions";
 import { activePayload, dbTypePayload, groupTypePayload } from "./constants";
 import EditRow from "./EditRow";
 import ExpandedRowContent from "./ExpandedRowContent";
@@ -136,7 +137,13 @@ ${whereClause}`;
 
   const handleExportQuery = async () => {
     try {
-      await navigator.clipboard.writeText(convertJsonToSqlUpdate(streamingRow));
+      const row = await selectRowsWhereAction(
+        env,
+        streamingRow.source_system_name,
+        streamingRow.source_table_name
+      );
+      if (row && row.length)
+        await navigator.clipboard.writeText(convertJsonToSqlUpdate(row[0]));
       toast.success("Copied to clipboard");
     } catch (error) {
       console.error("Unable to copy to clipboard:", error);

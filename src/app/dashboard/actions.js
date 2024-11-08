@@ -4,11 +4,15 @@ import {
   DeleteQuery,
   InsertQuery,
   SelectQuery,
+  SelectWhereQuery,
   UpdateQuery,
 } from "@/lib/common/db/pool";
 
 const selectRowsQuery =
   "select * from wip_configurations.spark_streaming_table_config ALLOW FILTERING";
+
+const selectRowWhereQuery =
+  "select * from wip_configurations.spark_streaming_table_config WHERE source_system_name = ? and source_table_name = ? ALLOW FILTERING";
 
 const updateRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
   SET groupid = ?, active = ?, run_frequency_in_secs = ?, default_run_frequency_in_secs = ?, source_table_query = ? , 
@@ -101,6 +105,18 @@ const lumperlink_data_by_warehouse_list = [
 
 const selectAction = async (env) => {
   return await SelectQuery(selectRowsQuery, env);
+};
+
+const selectRowsWhereAction = async (
+  env,
+  source_system_name,
+  source_table_name
+) => {
+  return await SelectWhereQuery(
+    selectRowWhereQuery,
+    { source_system_name, source_table_name },
+    env
+  );
 };
 
 const updateLastRunAction = async (row, env) => {
@@ -282,6 +298,7 @@ const unvoidAction = async (row, env) => {
 
 export {
   selectAction,
+  selectRowsWhereAction,
   updateAction,
   insertAction,
   deleteAction,
