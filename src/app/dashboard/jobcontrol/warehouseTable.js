@@ -55,7 +55,7 @@ export default function WarehouseTable({ env }) {
         <thead>
           <tr>
             <th>Job ID</th>
-            <th>Warehouse ID</th>
+            <th>Warehouse</th>
             <th>Enabled</th>
             <th>group_key</th>
             <th>

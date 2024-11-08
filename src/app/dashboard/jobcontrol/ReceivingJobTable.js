@@ -53,7 +53,7 @@ export default function ReceivingJobTable({ env }) {
         <thead>
           <tr>
             <th>Job ID</th>
-            <th>Warehouse ID</th>
+            <th>Warehouse</th>
             <th>Enabled</th>
             <th>update_time</th>
             <th></th>
