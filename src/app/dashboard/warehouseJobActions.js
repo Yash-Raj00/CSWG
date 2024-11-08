@@ -1,7 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { UpdateQuery, SelectQuery } from "@/lib/common/db/pool";
+import { SelectQuery, UpdateQuery } from "@/lib/common/db/pool";
 
 const selectWarehouseJobRowsQuery =
   "select * from wip_warehouse_data.warehouse_job_control";

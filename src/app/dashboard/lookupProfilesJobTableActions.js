@@ -1,7 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { UpdateQuery, SelectQuery } from "@/lib/common/db/pool";
+import { SelectQuery, UpdateQuery } from "@/lib/common/db/pool";
 
 const selectLookupProfileJobRowsQuery =
   "select * from wip_configurations.lookup_profiles_config";

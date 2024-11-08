@@ -1,13 +1,10 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import {
-  selectAction,
-  updateAction,
-} from "../receivingJobActions";
 import styles from "../../page.module.css";
+import { selectAction, updateAction } from "../receivingJobActions";
 import Row from "./receivingJobRow";
 
 export default function ReceivingJobTable({ env }) {

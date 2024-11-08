@@ -1,7 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { UpdateQuery, SelectQuery } from "@/lib/common/db/pool";
+import { SelectQuery, UpdateQuery } from "@/lib/common/db/pool";
 
 const selectShippingJobRowsQuery =
   "select * from wip_shipping_ing.shipping_job_control";

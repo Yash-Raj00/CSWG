@@ -1,24 +1,23 @@
 "use client";
-import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { sort } from "fast-sort";
-import { saveAs } from "file-saver";
-
+import styles from "../../page.module.css";
 import {
   deleteAction,
-  unvoidAction,
   selectAction,
+  unvoidAction,
   updateAction,
   updateLastRunAction,
 } from "../actions";
-import styles from "../../page.module.css";
-import Table from "./table";
-import InsertModal from "./insertModal";
 import { dbTypePayload, facilityPayload, groupTypePayload } from "./constants";
 import Footer from "./Footer";
+import InsertModal from "./insertModal";
 import ScrollButton from "./ScrollButton";
+import Table from "./table";
 
 const AVAILABLE_SORT_OPTIONS = ["Time Updated", "Source Name"];
 
@@ -32,7 +31,7 @@ export default function Streaming() {
 
   const [list, setList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [activeOnly, setActiveOnly] = useState(false);
+  const [activeOnly, setActiveOnly] = useState(true);
   const [notVoidOnly, setNotVoidOnly] = useState(true);
   const [rowToDuplicate, setRowToDuplicate] = useState();
   const [loading, setLoading] = useState(true);

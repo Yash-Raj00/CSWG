@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import styles from "../page.module.css";
 
 export default function Dashboard() {

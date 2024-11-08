@@ -1,7 +1,7 @@
 import React from "react";
+import { MultiSelect } from "react-multi-select-component";
 import styles from "../../page.module.css";
 import { facilityPayload } from "./constants";
-import { MultiSelect } from "react-multi-select-component";
 
 function ExpandedRowContent({
   streamingRow,

@@ -1,9 +1,10 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { FiRefreshCw } from "react-icons/fi";
-import { selectAction } from "../runLogActions";
 import styles from "../../page.module.css";
+import { selectAction } from "../runLogActions";
 import Row from "./RunLogRow";
 
 export default function RunLog({ env }) {
