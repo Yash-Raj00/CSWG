@@ -1,6 +1,6 @@
 const { facilityPayload } = require("@/app/dashboard/streaming/constants");
 
-export function getWarehouseDetails(warehouseId) {
+export function getFormattedWarehouseInfoById(warehouseId) {
   if (!warehouseId) return "";
   return (
     warehouseId +
