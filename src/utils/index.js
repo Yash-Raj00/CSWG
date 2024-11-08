@@ -1,7 +1,11 @@
 const { facilityPayload } = require("@/app/dashboard/streaming/constants");
 
-export const getWarehouseName = (warehouseId) => {
+export function getWarehouseDetails(warehouseId) {
+  if (!warehouseId) return "";
   return (
-    facilityPayload.find((val) => val.value == warehouseId)?.label ?? "Unknown"
+    warehouseId +
+    ", " +
+    (facilityPayload.find((warehouse) => warehouse.value == warehouseId)
+      ?.label ?? "Unknown")
   );
-};
+}

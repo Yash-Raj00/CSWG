@@ -1,4 +1,4 @@
-import { getWarehouseName } from "@/utils";
+import { getWarehouseDetails } from "@/utils";
 import { useState } from "react";
 import styles from "../../page.module.css";
 import { activePayload } from "../streaming/constants";
@@ -29,9 +29,7 @@ export default function Row({ row, updateRow }) {
       </td>
       <td className={styles.td}>
         <span className={styles.limitedSpan}>
-          {streamingRow.warehouse_id +
-            ", " +
-            getWarehouseName(streamingRow.warehouse_id) ?? ""}
+          {getWarehouseDetails(streamingRow.warehouse_id)}
         </span>
       </td>
       <td className={styles.td}>
