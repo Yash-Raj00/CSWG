@@ -115,12 +115,15 @@ export default function Row({
    AND source_table_name = '${source_table_name}';`;
 
     const setClause = Object.entries(columns)
-      .filter(([, value]) => value !== null)
+      .filter(([, value]) => !!value)
       .map(([key, value]) => {
-        if (typeof value === "string") return `   ${key} = '${value}'`;
+        if (typeof value === "string")
+          return `   ${key} = '${value.replace(/'/g, "''")}'`;
         if (Array.isArray(value)) {
-          console.log(key);
-          return `   ${key} = ${JSON.stringify(value)}`;
+          const arrayValues = value
+            .map((v) => `'${v.replace(/'/g, "''")}'`)
+            .join(", ");
+          return `   ${key} = [${arrayValues}]`;
         }
         return `   ${key} = ${value}`;
       })
@@ -142,9 +145,10 @@ ${whereClause}`;
         streamingRow.source_system_name,
         streamingRow.source_table_name
       );
-      if (row && row.length)
+      if (row && row.length) {
         await navigator.clipboard.writeText(convertJsonToSqlUpdate(row[0]));
-      toast.success("Copied to clipboard");
+        toast.success("Copied to clipboard");
+      }
     } catch (error) {
       console.error("Unable to copy to clipboard:", error);
     }
