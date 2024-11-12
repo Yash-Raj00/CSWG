@@ -115,7 +115,7 @@ export default function Row({
    AND source_table_name = '${source_table_name}';`;
 
     const setClause = Object.entries(columns)
-      .filter(([, value]) => !!value)
+      .filter(([, value]) => value !== null)
       .map(([key, value]) => {
         if (typeof value === "string")
           return `   ${key} = '${value.replace(/'/g, "''")}'`;
@@ -129,11 +129,7 @@ export default function Row({
       })
       .join(",\n");
 
-    const sqlUpdate = `
-UPDATE ${tableName}
-SET
-${setClause}
-${whereClause}`;
+    const sqlUpdate = `UPDATE ${tableName}\nSET\n${setClause}\n${whereClause}`;
 
     return sqlUpdate;
   }

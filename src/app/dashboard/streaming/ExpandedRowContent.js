@@ -65,7 +65,10 @@ function ExpandedRowContent({
         >
           export query:
           <TbDatabaseExport
-            onClick={handleExportQuery}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleExportQuery();
+            }}
             style={{ width: 20, height: 20, cursor: "pointer" }}
           />
           <br />
