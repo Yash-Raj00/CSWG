@@ -91,6 +91,25 @@ const SelectQuery = async (selectRowsQuery, env) => {
   }
 };
 
+const SelectWhereQuery = async (selectRowsQuery, params, env) => {
+  try {
+    const client = await ConnectToCassandra(env);
+    let result;
+    result = await client.execute(selectRowsQuery, params, {
+      prepare: true,
+    });
+
+    if (!result) {
+      return [];
+    }
+
+    return JSON.parse(JSON.stringify(result.rows));
+  } catch (error) {
+    console.error(JSON.stringify(error));
+    return [];
+  }
+};
+
 const UpdateQuery = async (updateRowQuery, params, env) => {
   try {
     const client = await ConnectToCassandra(env);
@@ -129,6 +148,7 @@ const DeleteQuery = async (deleteRowsQuery, params, env) => {
 export {
   ConnectToCassandra,
   SelectQuery,
+  SelectWhereQuery,
   UpdateQuery,
   InsertQuery,
   DeleteQuery,

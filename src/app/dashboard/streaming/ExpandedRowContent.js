@@ -1,4 +1,5 @@
 import React from "react";
+import { TbDatabaseExport } from "react-icons/tb";
 import { MultiSelect } from "react-multi-select-component";
 import styles from "../../page.module.css";
 import { facilityPayload } from "./constants";
@@ -8,6 +9,7 @@ function ExpandedRowContent({
   handleDeleteRow,
   handleUnvoidRow,
   handleChange,
+  handleExportQuery,
   handleRemoveLastRun,
   handleDuplicateRow,
   handleFacilityChange,
@@ -34,8 +36,6 @@ function ExpandedRowContent({
         .filter((item) => item)
     : [];
 
-  // console.log("facilities", streamingRow, facilities);
-
   return (
     <div
       style={{
@@ -53,6 +53,26 @@ function ExpandedRowContent({
               <br /> {streamingRow.voided_by}
             </>
           )}
+        </span>
+        <br />
+        <span
+          className={styles.smallCell}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          export query:
+          <TbDatabaseExport
+            onClick={(e) => {
+              e.stopPropagation();
+              handleExportQuery();
+            }}
+            style={{ width: 20, height: 20, cursor: "pointer" }}
+          />
+          <br />
+          {""}
         </span>
       </div>
       <div className={styles.streamingTdMid} style={tableRowStyle}>

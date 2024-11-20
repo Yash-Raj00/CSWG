@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "server": "10.231.0.143",
+            "port": 9042,
+            "previewLimit": 0,
+            "driver": "Cassandra",
+            "name": "UAT",
+            "database": "wip_configurations",
+            "username": "jji",
+            "password": "TouchDown"
+        }
+    ]
+}
