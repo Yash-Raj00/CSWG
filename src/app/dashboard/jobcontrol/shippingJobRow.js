@@ -35,6 +35,9 @@ export default function Row({ row, updateRow }) {
       <td className={styles.td}>
         <select
           name="enabled"
+          style={{
+            backgroundColor: streamingRow.enabled === "Y" && "forestgreen",
+          }}
           onChange={handleChange}
           value={streamingRow.enabled}
         >
