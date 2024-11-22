@@ -15,6 +15,10 @@ export default function ReceivingJobTable({ env }) {
     const fetchData = async () => {
       setLoading(true);
       const data = await selectAction(env);
+      if (!data) {
+        setLoading(false);
+        return;
+      }
 
       console.log("ReceivingJobTable fetchData", data);
 
