@@ -27,7 +27,7 @@ const updateLastRunTimestamp = `UPDATE wip_configurations.spark_streaming_table_
    SET last_run_timestamp = '' WHERE source_system_name = ? and source_table_name = ? `;
 
 const deleteRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
-  SET voided_by = ?, active = ?, updated_date = ?
+  SET voided_by = ?, active = ?, updated_date = ?, update_by = ?
   WHERE source_system_name = ? and source_table_name = ?`;
 
 const unvoidRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
@@ -256,7 +256,7 @@ const insertAction = async (row, env) => {
 };
 
 const deleteAction = async (row, env) => {
-  const { source_system_name, source_table_name, updated_date } = row;
+  const { source_system_name, source_table_name, updated_date, update_by } = row;
 
   console.log("deleteAction: ", row);
 
@@ -269,6 +269,7 @@ const deleteAction = async (row, env) => {
     voided_by,
     active,
     updated_date,
+    update_by,
     source_system_name,
     source_table_name,
   ];

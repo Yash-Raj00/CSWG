@@ -121,8 +121,9 @@ export default function Streaming() {
       voided_by: "system",
       active: "N",
       updated_date: Date.now() / 1000,
+      update_by: localStorage.getItem("user").split("@")[0],
     };
-
+    console.log("deleteRow", updatedRow);
     const result = await deleteAction(updatedRow, env);
 
     if (!result) {
