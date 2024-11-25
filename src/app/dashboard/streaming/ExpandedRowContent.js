@@ -213,12 +213,10 @@ function ExpandedRowContent({
             </span>
           </div>
         </div>
-        {streamingRow.voided_by && (
-          <span className={styles.smallCell}>
-            Update by:{" "}
-            {streamingRow.update_by ? streamingRow.update_by : "No Data"}
-          </span>
-        )}
+        <span className={styles.smallCell}>
+          Updated by:{" "}
+          {streamingRow.updated_by ? streamingRow.updated_by : "N/A"}
+        </span>
       </div>
       <div className={styles.streamingTdMid} style={tableRowStyle}>
         <span className={styles.smallCell}>Notes</span>

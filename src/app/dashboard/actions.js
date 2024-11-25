@@ -16,22 +16,22 @@ const selectRowWhereQuery =
 
 const updateRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
   SET groupid = ?, active = ?, run_frequency_in_secs = ?, default_run_frequency_in_secs = ?, source_table_query = ? , 
-  facility = ?, rest_url = ?, alert_frequency_in_secs = ?, batch_size = ?, notes = ?, updated_date = ?, target_keyspace = ?, target_table_name = ?, target_table_list = ?, source_system_dbtype = ?
+  facility = ?, rest_url = ?, alert_frequency_in_secs = ?, batch_size = ?, notes = ?, updated_date = ?, updated_by = ?, target_keyspace = ?, target_table_name = ?, target_table_list = ?, source_system_dbtype = ?
   WHERE source_system_name = ? and source_table_name = ?`;
 
 const insertRowQuery = `INSERT INTO wip_configurations.spark_streaming_table_config 
-  (source_system_name, source_table_name, active, alert_frequency_in_secs, batch_size, facility, rest_url, groupid, run_frequency_in_secs, default_run_frequency_in_secs, source_system_dbtype, source_table_query, target_keyspace, target_table_list, target_table_name) 
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  (source_system_name, source_table_name, active, alert_frequency_in_secs, batch_size, updated_by, facility, rest_url, groupid, run_frequency_in_secs, default_run_frequency_in_secs, source_system_dbtype, source_table_query, target_keyspace, target_table_list, target_table_name) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 const updateLastRunTimestamp = `UPDATE wip_configurations.spark_streaming_table_config
    SET last_run_timestamp = '' WHERE source_system_name = ? and source_table_name = ? `;
 
 const deleteRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
-  SET voided_by = ?, active = ?, updated_date = ?, update_by = ?
+  SET voided_by = ?, active = ?, updated_date = ?, updated_by = ?
   WHERE source_system_name = ? and source_table_name = ?`;
 
 const unvoidRowQuery = `UPDATE wip_configurations.spark_streaming_table_config 
-  SET voided_by = ?, active = ?, updated_date = ?
+  SET voided_by = ?, active = ?, updated_date = ?, updated_by = ?
   WHERE source_system_name = ? and source_table_name = ?`;
 
 // target table that needs extra additions
@@ -138,6 +138,7 @@ const updateAction = async (row, env) => {
     rest_url,
     alert_frequency_in_secs,
     batch_size,
+    updated_by,
     notes,
     target_keyspace,
     target_table_name,
@@ -202,6 +203,7 @@ const updateAction = async (row, env) => {
     batch_size,
     notes,
     update_time,
+    updated_by,
     target_keyspace,
     target_table_name,
     target_table_list,
@@ -220,6 +222,7 @@ const insertAction = async (row, env) => {
     active,
     alert_frequency_in_secs,
     batch_size,
+    updated_by,
     facility,
     rest_url,
     groupid,
@@ -238,6 +241,7 @@ const insertAction = async (row, env) => {
     active,
     alert_frequency_in_secs,
     batch_size,
+    updated_by,
     facility,
     rest_url,
     groupid,
@@ -256,7 +260,8 @@ const insertAction = async (row, env) => {
 };
 
 const deleteAction = async (row, env) => {
-  const { source_system_name, source_table_name, updated_date, update_by } = row;
+  const { source_system_name, source_table_name, updated_date, updated_by } =
+    row;
 
   console.log("deleteAction: ", row);
 
@@ -269,7 +274,7 @@ const deleteAction = async (row, env) => {
     voided_by,
     active,
     updated_date,
-    update_by,
+    updated_by,
     source_system_name,
     source_table_name,
   ];
@@ -282,6 +287,7 @@ const unvoidAction = async (row, env) => {
     source_system_name,
     source_table_name,
     updated_date,
+    updated_by,
     voided_by,
     active,
   } = row;
@@ -290,6 +296,7 @@ const unvoidAction = async (row, env) => {
     voided_by,
     active,
     updated_date,
+    updated_by,
     source_system_name,
     source_table_name,
   ];
