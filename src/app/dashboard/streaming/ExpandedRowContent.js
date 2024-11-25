@@ -125,7 +125,7 @@ function ExpandedRowContent({
                 name="rest_url"
                 type="text"
                 className={styles.shortInput}
-                value={streamingRow.rest_url}
+                value={streamingRow.rest_url || ""}
                 onChange={handleChange}
                 disabled={isVoid}
                 style={{
@@ -144,7 +144,7 @@ function ExpandedRowContent({
             name="run_frequency_in_secs"
             type="text"
             className={styles.shortInput}
-            value={streamingRow.run_frequency_in_secs}
+            value={streamingRow.run_frequency_in_secs || ""}
             onChange={handleChange}
             disabled={isVoid}
           />
@@ -158,7 +158,7 @@ function ExpandedRowContent({
             name="default_run_frequency_in_secs"
             type="text"
             className={styles.shortInput}
-            value={streamingRow.default_run_frequency_in_secs}
+            value={streamingRow.default_run_frequency_in_secs || ""}
             onChange={handleChange}
             disabled={isVoid}
           />
@@ -172,7 +172,7 @@ function ExpandedRowContent({
             name="alert_frequency_in_secs"
             type="text"
             className={styles.shortInput}
-            value={streamingRow.alert_frequency_in_secs}
+            value={streamingRow.alert_frequency_in_secs || ""}
             onChange={handleChange}
             disabled={isVoid}
           />

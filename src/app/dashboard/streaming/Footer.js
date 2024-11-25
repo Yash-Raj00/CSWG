@@ -1,3 +1,4 @@
+import { convertJsonToSqlUpdate } from "@/utils";
 import { saveAs } from "file-saver";
 import React, { useEffect, useState } from "react";
 import { groupTypePayload } from "./constants";
@@ -9,6 +10,12 @@ function Footer({ data, loading }) {
     const json = JSON.stringify(data, null, 2); // Pretty print JSON
     const blob = new Blob([json], { type: "application/json" });
     saveAs(blob, "streaming_data.json");
+  };
+
+  const exportToQueries = () => {
+    const sqlUpdates = data.map(convertJsonToSqlUpdate).join("\n\n");
+    const blob = new Blob([sqlUpdates], { type: "text/plain" });
+    saveAs(blob, "streaming_data.sql");
   };
 
   useEffect(() => {
@@ -38,13 +45,27 @@ function Footer({ data, loading }) {
             </span>
           ))}
         </div>
-        <button
-          disabled={loading}
-          style={{ marginTop: "20px", padding: "2px 6px" }}
-          onClick={exportToJson}
+        <div
+          style={{
+            display: "flex",
+            gap: 20,
+          }}
         >
-          Export JSON
-        </button>
+          <button
+            disabled={loading}
+            style={{ marginTop: "20px", padding: "2px 6px" }}
+            onClick={exportToJson}
+          >
+            Export JSON
+          </button>
+          <button
+            disabled={loading}
+            style={{ marginTop: "20px", padding: "2px 6px" }}
+            onClick={exportToQueries}
+          >
+            Export Queries
+          </button>
+        </div>
       </>
     )
   );

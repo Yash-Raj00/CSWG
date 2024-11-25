@@ -64,6 +64,10 @@ export default function Streaming() {
   async function fetchData() {
     setLoading(true);
     const data = await selectAction(env);
+    if (!data) {
+      setLoading(false);
+      return toast.error("Unable to Connect to DB");
+    }
 
     console.log("fetchData", JSON.stringify(data));
     setList(data);

@@ -9,6 +9,7 @@ const selectAction = async (env) => {
   LIMIT 500
   ALLOW FILTERING`;
   const data = await SelectQuery(selectShippingJobRowsQueryToday, env);
+  if (!data) return;
   const orderedData = data.sort((a, b) =>
     b.created_date.localeCompare(a.created_date)
   );

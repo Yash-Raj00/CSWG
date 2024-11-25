@@ -15,6 +15,10 @@ export default function ShippingTable({ env }) {
     const fetchData = async () => {
       setLoading(true);
       const data = await selectAction(env);
+      if (!data) {
+        setLoading(false);
+        return toast.error("Unable to Connect to DB");
+      }
 
       console.log("ShippingTable fetchData", data);
 

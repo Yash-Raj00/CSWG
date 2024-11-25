@@ -87,7 +87,7 @@ const SelectQuery = async (selectRowsQuery, env) => {
     return JSON.parse(JSON.stringify(result.rows));
   } catch (error) {
     console.error(JSON.stringify(error));
-    return [];
+    return false;
   }
 };
 
@@ -106,7 +106,7 @@ const SelectWhereQuery = async (selectRowsQuery, params, env) => {
     return JSON.parse(JSON.stringify(result.rows));
   } catch (error) {
     console.error(JSON.stringify(error));
-    return [];
+    return false;
   }
 };
 

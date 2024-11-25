@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { FiRefreshCw } from "react-icons/fi";
+import { toast, ToastContainer } from "react-toastify";
 import styles from "../../page.module.css";
 import { selectAction } from "../runLogActions";
 import Row from "./RunLogRow";
@@ -16,6 +17,10 @@ export default function RunLog({ env }) {
     setIsRefreshing(true);
     setLoading(true);
     const data = await selectAction(env);
+    if (!data) {
+      setLoading(false);
+      return toast.error("Unable to Connect to DB");
+    }
 
     console.log("WarehouseTable fetchData", data);
 
@@ -60,6 +65,7 @@ export default function RunLog({ env }) {
           ))}
         </tbody>
       </table>
+      <ToastContainer />
     </main>
   );
 }
