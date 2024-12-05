@@ -91,7 +91,11 @@ export default function Streaming() {
   };
 
   const updateRow = async (row) => {
-    const result = await updateAction(row, env);
+    const updatedRow = {
+      ...row,
+      updated_by: localStorage.getItem("user"),
+    };
+    const result = await updateAction(updatedRow, env);
 
     if (!result) {
       toast.error("Failed to update row");
@@ -121,8 +125,8 @@ export default function Streaming() {
       voided_by: "system",
       active: "N",
       updated_date: Date.now() / 1000,
+      updated_by: localStorage.getItem("user"),
     };
-
     const result = await deleteAction(updatedRow, env);
 
     if (!result) {
@@ -150,6 +154,7 @@ export default function Streaming() {
     const updatedRow = {
       ...row,
       voided_by: "",
+      updated_by: localStorage.getItem("user"),
       active: "N",
       updated_date: Date.now() / 1000,
     };

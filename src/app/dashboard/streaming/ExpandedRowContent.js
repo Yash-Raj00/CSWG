@@ -136,60 +136,86 @@ function ExpandedRowContent({
           </span>
         )}
       </div>
-      <div className={styles.streamingTdMid} style={tableRowStyle}>
-        <span className={styles.smallCell}>run freq</span>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <div
+            className={styles.streamingTdMid}
+            style={{ ...tableRowStyle, height: 60 }}
+          >
+            <span className={styles.smallCell}>run freq</span>
+            <span className={styles.smallCell}>
+              <input
+                onClick={(e) => e.stopPropagation()}
+                name="run_frequency_in_secs"
+                type="text"
+                className={styles.shortInput}
+                value={streamingRow.run_frequency_in_secs || ""}
+                onChange={handleChange}
+                disabled={isVoid}
+              />
+            </span>
+          </div>
+          <div
+            className={styles.streamingTdMid}
+            style={{ ...tableRowStyle, height: 60 }}
+          >
+            <span className={styles.smallCell}>default run</span>
+            <span className={styles.smallCell}>
+              <input
+                onClick={(e) => e.stopPropagation()}
+                name="default_run_frequency_in_secs"
+                type="text"
+                className={styles.shortInput}
+                value={streamingRow.default_run_frequency_in_secs || ""}
+                onChange={handleChange}
+                disabled={isVoid}
+              />
+            </span>
+          </div>
+          <div
+            className={styles.streamingTdMid}
+            style={{ ...tableRowStyle, height: 60 }}
+          >
+            <span className={styles.smallCell}>alert</span>
+            <span className={styles.smallCell}>
+              <input
+                onClick={(e) => e.stopPropagation()}
+                name="alert_frequency_in_secs"
+                type="text"
+                className={styles.shortInput}
+                value={streamingRow.alert_frequency_in_secs || ""}
+                onChange={handleChange}
+                disabled={isVoid}
+              />
+            </span>
+          </div>
+          <div
+            className={styles.streamingTdMid}
+            style={{ ...tableRowStyle, height: 60 }}
+          >
+            <span className={styles.smallCell}>batch</span>
+            <span className={styles.smallCell}>
+              <input
+                onClick={(e) => e.stopPropagation()}
+                name="batch_size"
+                type="text"
+                className={styles.shortInput}
+                value={streamingRow.batch_size}
+                onChange={handleChange}
+                disabled={isVoid}
+              />
+            </span>
+          </div>
+        </div>
         <span className={styles.smallCell}>
-          <input
-            onClick={(e) => e.stopPropagation()}
-            name="run_frequency_in_secs"
-            type="text"
-            className={styles.shortInput}
-            value={streamingRow.run_frequency_in_secs || ""}
-            onChange={handleChange}
-            disabled={isVoid}
-          />
-        </span>
-      </div>
-      <div className={styles.streamingTdMid} style={tableRowStyle}>
-        <span className={styles.smallCell}>default run</span>
-        <span className={styles.smallCell}>
-          <input
-            onClick={(e) => e.stopPropagation()}
-            name="default_run_frequency_in_secs"
-            type="text"
-            className={styles.shortInput}
-            value={streamingRow.default_run_frequency_in_secs || ""}
-            onChange={handleChange}
-            disabled={isVoid}
-          />
-        </span>
-      </div>
-      <div className={styles.streamingTdMid} style={tableRowStyle}>
-        <span className={styles.smallCell}>alert</span>
-        <span className={styles.smallCell}>
-          <input
-            onClick={(e) => e.stopPropagation()}
-            name="alert_frequency_in_secs"
-            type="text"
-            className={styles.shortInput}
-            value={streamingRow.alert_frequency_in_secs || ""}
-            onChange={handleChange}
-            disabled={isVoid}
-          />
-        </span>
-      </div>
-      <div className={styles.streamingTdMid} style={tableRowStyle}>
-        <span className={styles.smallCell}>batch</span>
-        <span className={styles.smallCell}>
-          <input
-            onClick={(e) => e.stopPropagation()}
-            name="batch_size"
-            type="text"
-            className={styles.shortInput}
-            value={streamingRow.batch_size}
-            onChange={handleChange}
-            disabled={isVoid}
-          />
+          Updated by:{" "}
+          {streamingRow.updated_by ? streamingRow.updated_by : "N/A"}
         </span>
       </div>
       <div className={styles.streamingTdMid} style={tableRowStyle}>
@@ -243,6 +269,7 @@ function ExpandedRowContent({
             </button>
           ) : (
             <button
+              disabled={streamingRow.active === "Y"}
               onClick={(e) => {
                 e.stopPropagation();
                 handleDeleteRow();

@@ -102,6 +102,7 @@ const InsertModal = ({
           `${formData.target_keyspace}.${formData.target_table_name}`,
         ],
         facility: tempFacilities.map((faci) => faci.value).join(", "),
+        updated_by: localStorage.getItem("user"),
       },
       env
     );
